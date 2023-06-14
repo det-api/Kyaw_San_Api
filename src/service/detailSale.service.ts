@@ -1,8 +1,7 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
 import detailSaleModel, { detailSaleDocument } from "../model/detailSale.model";
 import { calcFuelBalance } from "./fuelBalance.service";
-import config from 'config'
-
+import config from "config";
 
 export const getDetailSale = async (query: FilterQuery<detailSaleDocument>) => {
   try {
@@ -18,7 +17,7 @@ export const getDetailSale = async (query: FilterQuery<detailSaleDocument>) => {
 
 export const addDetailSale = async (body: detailSaleDocument) => {
   try {
-   return await new detailSaleModel(body).save();
+    return await new detailSaleModel(body).save();
   } catch (e) {
     throw new Error(e);
   }
@@ -59,22 +58,28 @@ export const getDetailSaleByFuelType = async (
     fuelType: fuelType,
   });
 
-  let fuelLength = 0;
-  if (fuel.length != 0) {
-    fuelLength = fuel.length + 1;
-  }
+
   let fuelLiter = fuel
     .map((ea) => ea["saleLiter"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
   let fuelAmount = fuel
     .map((ea) => ea["totalPrice"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
-  return { count: fuelLength, liter: fuelLiter, price: fuelAmount };
+  return { count: fuel.length, liter: fuelLiter, price: fuelAmount };
 };
 
-export const detailSalePaginate = async (pageNo : number) =>{
-  const limitNo = config.get<number>('page_limit')
-  const reqPage = pageNo == 1 ? 0 : pageNo-1
+export const detailSalePaginate = async (
+  pageNo: number,
+  query: FilterQuery<detailSaleDocument>
+) => {
+  const limitNo = config.get<number>("page_limit");
+  const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
-  return await detailSaleModel.find().skip(skipCount).limit(limitNo)
-}
+  return await detailSaleModel
+    .find(query)
+    .skip(skipCount)
+    .limit(limitNo)
+    .lean()
+    .populate("stationDetailId")
+    .select("-__v");
+};

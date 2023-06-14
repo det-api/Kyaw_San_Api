@@ -1,6 +1,7 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
 import fuelInModel, { fuelInDocument } from "../model/fuelIn.model";
 import { getFuelBalance, updateFuelBalance } from "./fuelBalance.service";
+import config from "config";
 
 export const getFuelIn = async (query: FilterQuery<fuelInDocument>) => {
   try {
@@ -9,11 +10,25 @@ export const getFuelIn = async (query: FilterQuery<fuelInDocument>) => {
       .lean()
       .populate("stationId")
       .select("-__v");
-    // let reuslt = await fuelInModel.count();
-    // console.log(reuslt);
   } catch (e) {
     throw new Error(e);
   }
+};
+
+export const fuelInPaginate = async (
+  pageNo: number,
+  query: FilterQuery<fuelInDocument>
+) => {
+  const limitNo = config.get<number>("page_limit");
+  const reqPage = pageNo == 1 ? 0 : pageNo - 1;
+  const skipCount = limitNo * reqPage;
+  return await fuelInModel
+    .find(query)
+    .skip(skipCount)
+    .limit(limitNo)
+    .lean()
+    .populate("stationId")
+    .select("-__v");
 };
 
 export const addFuelIn = async (body: fuelInDocument) => {

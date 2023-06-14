@@ -2,7 +2,7 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 import dailyReportModel, {
   dailyReportDocument,
 } from "../model/dailyReport.model";
-import { string } from "zod";
+import config from "config";
 
 export const getDailyReport = async (
   query: FilterQuery<dailyReportDocument>
@@ -62,4 +62,20 @@ export const getDailyReportByDate = async (
     date: { $gte: `${d1}T00:00:00Z`, $lte: `${d2}T23:59:59Z` },
   });
   return result;
+};
+
+export const dailyReportPaginate = async (
+  pageNo: number,
+  query: FilterQuery<dailyReportDocument>
+) => {
+  const limitNo = config.get<number>("page_limit");
+  const reqPage = pageNo == 1 ? 0 : pageNo - 1;
+  const skipCount = limitNo * reqPage;
+  return await dailyReportModel
+    .find(query)
+    .skip(skipCount)
+    .limit(limitNo)
+    .lean()
+    .populate("stationId")
+    .select("-__v");
 };

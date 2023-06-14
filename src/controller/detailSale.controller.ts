@@ -20,40 +20,47 @@ export const getDetailSaleHandler = async (
   next: NextFunction
 ) => {
   try {
-    let result = await getDetailSale(req.query);
+    let pageNo = Number(req.params.page);
+    let result = await detailSalePaginate(pageNo, req.query);
     fMsg(res, "DetailSale are here", result);
   } catch (e) {
     next(new Error(e));
   }
 };
 
+//import
 export const addDetailSaleHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
+    //that is remove after pos updated
     let check = await getDetailSale({ vocono: req.body.vocono });
-    //console.log(check);
     if (check.length != 0) {
-      fMsg(res);
+      fMsg(res, "Data with that Vocono is already exist");
       return;
     }
+
     let result = await addDetailSale(req.body);
+
     let checkDate = await getFuelBalance({
+      stationId: req.body.stationDetailId,
       createAt: req.body.dailyReportDate,
     });
     if (checkDate.length == 0) {
-      // console.log("wk");
       let prevDate = previous(new Date(req.body.dailyReportDate));
-      let prevResult = await getFuelBalance({ createAt: prevDate });
+      let prevResult = await getFuelBalance({
+        stationId: req.body.stationDetailId,
+        createAt: prevDate,
+      });
       // console.log(prevResult);
       await Promise.all(
         prevResult.map(async (ea) => {
-          let obj;
+          let obj: fuelBalanceDocument;
           if (ea.balance == 0) {
             obj = {
-              stationId: "6464e9f1c45b82216ab1db6b",
+              stationId: ea.stationId,
               fuelType: ea.fuelType,
               capacity: ea.capacity,
               opening: ea.opening + ea.fuelIn,
@@ -64,7 +71,7 @@ export const addDetailSaleHandler = async (
             } as fuelBalanceDocument;
           } else {
             obj = {
-              stationId: "6464e9f1c45b82216ab1db6b",
+              stationId: ea.stationId,
               fuelType: ea.fuelType,
               capacity: ea.capacity,
               opening: ea.opening + ea.fuelIn - ea.cash,
@@ -79,8 +86,9 @@ export const addDetailSaleHandler = async (
         })
       );
     }
+
     await calcFuelBalance(
-      { fuelType: result.fuelType, createAt: result.dailyReportDate },
+      { stationId:result.stationDetailId ,fuelType: result.fuelType, createAt: result.dailyReportDate },
       { liter: result.saleLiter },
       result.nozzleNo
     );
@@ -116,13 +124,16 @@ export const deleteDetailSaleHandler = async (
   }
 };
 
-
-export const detailSalePaginateHandler = async (req : Request , res : Response , next : NextFunction) =>{
-  let pageNo = Number(req.params.page)
-  try{
-    let result = await detailSalePaginate(pageNo)
-    fMsg(res , "all Product are here" , result)
-  }catch (e : any){
-    next(new Error(e.message))
-  }
-}
+// export const detailSalePaginateHandler = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   let pageNo = Number(req.params.page);
+//   try {
+//     let result = await detailSalePaginate(pageNo);
+//     fMsg(res, "all Product are here", result);
+//   } catch (e: any) {
+//     next(new Error(e.message));
+//   }
+// };

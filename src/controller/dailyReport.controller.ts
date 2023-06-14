@@ -6,9 +6,9 @@ import {
   updateDailyReport,
   deleteDailyReport,
   getDailyReportByDate,
+  dailyReportPaginate,
 } from "../service/dailyReport.service";
 import {
-  // detailSaleByDate,
   getDetailSale,
   getDetailSaleByFuelType,
 } from "../service/detailSale.service";
@@ -19,11 +19,11 @@ export const getDailyReportHandler = async (
   next: NextFunction
 ) => {
   try {
-    let result = await getDailyReport(req.query);
+    let pageNo = Number(req.params.page);
 
+    let result = await dailyReportPaginate(pageNo, req.query);
     await Promise.all(
       result.map(async (ea) => {
-        // console.log(ea)
         ea["ninety-two"] = await getDetailSaleByFuelType(
           ea["dateOfDay"],
           "001-Octane Ron(92)"

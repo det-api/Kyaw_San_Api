@@ -3,24 +3,24 @@ import {
   addPermitHandler,
   deletPermitHandler,
 } from "../controller/permit.controller";
-import { permitSchema, allSchemaId } from "../utils/schema";
 import { validateAll, validateToken } from "../middleware/validator";
 import { roleValidator } from "../middleware/roleValidator";
+import { allSchemaId, permitSchema } from "../schema/scheama";
 
 const permitRoute = require("express").Router();
 
 permitRoute.get("/", validateToken, roleValidator("admin"), getPermitHandler);
 permitRoute.post(
   "/",
-  validateAll(permitSchema),
   validateToken,
+  validateAll(permitSchema),
   roleValidator("admin"),
   addPermitHandler
 );
 permitRoute.delete(
   "/",
-  validateAll(allSchemaId),
   validateToken,
+  validateAll(allSchemaId),
   roleValidator("admin"),
   deletPermitHandler
 );

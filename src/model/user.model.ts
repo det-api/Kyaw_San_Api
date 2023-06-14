@@ -10,7 +10,6 @@ export interface UserInput {
   phone: number;
   name: string;
   password: string;
-  image: string;
 }
 
 export interface UserDocument extends UserInput, mongoose.Document {
@@ -26,6 +25,11 @@ const userSchema = new Schema(
     phone: { type: Number, required: true, unique: true },
     name: { type: String, required: true },
     password: { type: String, required: true },
+    // stationId: {
+    //   type: Schema.Types.ObjectId,
+    //   require: true,
+    //   ref: "stationDetail",
+    // },
     roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
     permits: [{ type: Schema.Types.ObjectId, ref: "permit" }],
   },
@@ -59,4 +63,3 @@ userSchema.methods.comparePassword = async function (
 const UserModel = mongoose.model<UserDocument>("user", userSchema);
 
 export default UserModel;
-

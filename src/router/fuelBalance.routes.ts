@@ -12,22 +12,22 @@ const fuelBalanceRoute = require("express").Router();
 
 fuelBalanceRoute.get(
   "/all",
-  validateToken,
-  hasAnyPermit(["view"]),
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getAllFuelBalanceHandler
 );
 
 fuelBalanceRoute.get(
-  "/",
-  validateToken,
-  hasAnyPermit(["view"]),
+  "/:page",
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getFuelBalanceHandler
 );
 fuelBalanceRoute.post(
   "/",
-  validateToken,
-  roleValidator("admin"),
-  hasAnyPermit(["add"]),
+  // validateToken,
+  // roleValidator("admin"),
+  // hasAnyPermit(["add"]),
   addFuelBalanceHandler
 );
 
@@ -41,9 +41,9 @@ fuelBalanceRoute.patch(
 
 fuelBalanceRoute.delete(
   "/",
-  validateToken,
-  roleValidator("admin"),
-  hasAnyPermit(["delete"]),
+  // validateToken,
+  // roleValidator("admin"),
+  // hasAnyPermit(["delete"]),
   deleteFuelBalanceHandler
 );
 

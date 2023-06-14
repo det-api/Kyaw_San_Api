@@ -1,5 +1,4 @@
 import mongoose , {Schema} from "mongoose";
-import { dailyPriceDocument } from "./dailyPrice.model";
 
 export interface stationDetailDocument extends mongoose.Document{
     name : string;

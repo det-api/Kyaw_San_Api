@@ -12,18 +12,18 @@ import { allSchemaId, stationDetailSchema } from "../schema/scheama";
 const stationDetailRoute = require("express").Router();
 
 stationDetailRoute.get(
-  "/",
-  validateToken,
-  hasAnyPermit(["view"]),
+  "/:page",
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getStationDetailHandler
 );
 
 stationDetailRoute.post(
   "/",
-  validateToken,
-  validateAll(stationDetailSchema),
-  roleValidator("admin"),
-  hasAnyPermit(["add"]),
+  // validateToken,
+  // validateAll(stationDetailSchema),
+  // roleValidator("admin"),
+  // hasAnyPermit(["add"]),
   addStationDetailHandler
 );
 

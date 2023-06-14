@@ -2,8 +2,6 @@ import mongoose, { Schema } from "mongoose";
 import { getDailyReportByDate } from "../service/dailyReport.service";
 import moment from "moment-timezone";
 
-const localTime = moment().toDate();
-
 export interface detailSaleDocument extends mongoose.Document {
   stationDetailId: string;
   dailyReportDate: string;
@@ -29,12 +27,12 @@ const detailSaleSchema = new Schema({
   carNo: { type: String, default: null }, //manual
   vehicleType: { type: String, default: "car" }, //manual
   nozzleNo: { type: Number, required: true },
-  fuelType: { type: String, require: true },
-  salePrice: { type: Number, default: 0 },
-  saleLiter: { type: Number, default: 0 },
-  totalPrice: { type: Number, default: 0 },
-  totalizer_liter: { type: Number, default: 0 },
-  totalizer_amount: { type: Number, default: 0 },
+  fuelType: { type: String, required: true },
+  salePrice: { type: Number, required: true },
+  saleLiter: { type: Number, required: true },
+  totalPrice: { type: Number, required: true },
+  totalizer_liter: { type: Number, required: true },
+  totalizer_amount: { type: Number, required: true },
   dailyReportDate: {
     type: String,
     default: new Date().toLocaleDateString(`fr-CA`),
@@ -44,14 +42,13 @@ const detailSaleSchema = new Schema({
 
 detailSaleSchema.pre("save", function (next) {
   if (this.fuelType == "001-Octane Ron(92)" && this.salePrice < 5000) {
-    // console.log("hh");
     this.vehicleType = "Cycle";
   }
 
   const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
-  if(this.dailyReportDate){
-    next()
-    return
+  if (this.dailyReportDate) {
+    next();
+    return;
   }
   this.dailyReportDate = currentDate;
   next();

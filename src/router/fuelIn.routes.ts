@@ -10,14 +10,13 @@ import { validateAll, validateToken } from "../middleware/validator";
 import { allSchemaId, fuelInSchema } from "../schema/scheama";
 const fuelInRoute = require("express").Router();
 
-fuelInRoute.get("/", getFuelInHandler);
+fuelInRoute.get("/:page", getFuelInHandler);
 
 fuelInRoute.post(
   "/",
   validateToken,
   roleValidator("admin"),
   hasAnyPermit(["add"]),
-  validateAll(fuelInSchema),
   addFuelInHandler
 );
 fuelInRoute.patch(

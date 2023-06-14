@@ -4,5 +4,5 @@ export default {
   dbUrl: "mongodb://localhost:27017/fuel-station",
   saltWorkFactor: 10,
   secretKey: "suuhh",
-  page_limit : 2,
+  page_limit : 50,
 };

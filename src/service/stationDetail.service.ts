@@ -1,7 +1,12 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
-import stationDetailModel , {stationDetailDocument} from "../model/stationDetail.model";
+import stationDetailModel, {
+  stationDetailDocument,
+} from "../model/stationDetail.model";
+import config from "config";
 
-export const getStationDetail= async (query: FilterQuery<stationDetailDocument>) => {
+export const getStationDetail = async (
+  query: FilterQuery<stationDetailDocument>
+) => {
   try {
     return await stationDetailModel.find(query).lean().select("-__v");
   } catch (e) {
@@ -9,7 +14,22 @@ export const getStationDetail= async (query: FilterQuery<stationDetailDocument>)
   }
 };
 
-export const addStationDetail= async (body: stationDetailDocument) => {
+export const stationDetailPaginate = async (
+  pageNo: number,
+  query: FilterQuery<stationDetailDocument>
+) => {
+  const limitNo = config.get<number>("page_limit");
+  const reqPage = pageNo == 1 ? 0 : pageNo - 1;
+  const skipCount = limitNo * reqPage;
+  return await stationDetailModel
+    .find(query)
+    .skip(skipCount)
+    .limit(limitNo)
+    .lean()
+    .select("-__v");
+};
+
+export const addStationDetail = async (body: stationDetailDocument) => {
   try {
     return await new stationDetailModel(body).save();
   } catch (e) {
@@ -17,7 +37,7 @@ export const addStationDetail= async (body: stationDetailDocument) => {
   }
 };
 
-export const updateStationDetail= async (
+export const updateStationDetail = async (
   query: FilterQuery<stationDetailDocument>,
   body: UpdateQuery<stationDetailDocument>
 ) => {
@@ -29,9 +49,11 @@ export const updateStationDetail= async (
   }
 };
 
-export const deleteStationDetail= async (query: FilterQuery<stationDetailDocument>) => {
+export const deleteStationDetail = async (
+  query: FilterQuery<stationDetailDocument>
+) => {
   try {
-    let StationDetail= await stationDetailModel.find(query);
+    let StationDetail = await stationDetailModel.find(query);
     if (!StationDetail) {
       throw new Error("No StationDetail with that id");
     }

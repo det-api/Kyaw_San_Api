@@ -13,17 +13,18 @@ import { allSchemaId, dailyReportSchema } from "../schema/scheama";
 const dailyReportRoute = require("express").Router();
 
 dailyReportRoute.get(
-  "/",
-  validateToken,
-  hasAnyPermit(["view"]),
+  "/:page",
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getDailyReportHandler
 );
+
 dailyReportRoute.post(
   "/",
-  validateToken,
-  roleValidator("admin"),
-  hasAnyPermit(["add"]),
-  validateAll(dailyReportSchema),
+  // validateToken,
+  // roleValidator("admin"),
+  // hasAnyPermit(["add"]),
+  // validateAll(dailyReportSchema),
   addDailyReportHandler
 );
 dailyReportRoute.patch(
@@ -36,10 +37,10 @@ dailyReportRoute.patch(
 );
 dailyReportRoute.delete(
   "/",
-  validateToken,
-  roleValidator("admin"),
-  hasAnyPermit(["delete"]),
-  validateAll(allSchemaId),
+  // validateToken,
+  // roleValidator("admin"),
+  // hasAnyPermit(["delete"]),
+  // validateAll(allSchemaId),
   deleteDailyReportHandler
 );
 

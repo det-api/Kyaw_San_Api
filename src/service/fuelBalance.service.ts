@@ -2,6 +2,7 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 import fuelBalanceModel, {
   fuelBalanceDocument,
 } from "../model/fuelBalance.model";
+import config from "config";
 
 export const getFuelBalance = async (
   query: FilterQuery<fuelBalanceDocument>
@@ -19,6 +20,8 @@ export const getFuelBalance = async (
 
 export const addFuelBalance = async (body: fuelBalanceDocument) => {
   try {
+    console.log("HREE");
+    // console.log(body);
     return await new fuelBalanceModel(body).save();
   } catch (e) {
     throw new Error(e);
@@ -54,7 +57,6 @@ export const deleteFuelBalance = async (
 
 export const calcFuelBalance = async (query, body, payload: number) => {
   try {
-
     let result = await fuelBalanceModel.find(query);
     if (result.length == 0) {
       throw new Error("not work");
@@ -63,8 +65,8 @@ export const calcFuelBalance = async (query, body, payload: number) => {
       (ea: { nozzles: string[] }) =>
         ea["nozzles"].includes(payload.toString()) == true
     );
-    if(!gg){
-      throw new Error('no tank with that nozzle')
+    if (!gg) {
+      throw new Error("no tank with that nozzle");
     }
     let cashLiter = gg?.cash + body.liter;
 
@@ -78,4 +80,23 @@ export const calcFuelBalance = async (query, body, payload: number) => {
   } catch (e) {
     throw new Error(e);
   }
+};
+
+export const fuelBalancePaginate = async (
+  pageNo: number,
+  query: FilterQuery<fuelBalanceDocument>
+) => {
+  // console.log(query);/
+  let result = await fuelBalanceModel.find(query);
+  // console.log(result);
+  const limitNo = config.get<number>("page_limit");
+  const reqPage = pageNo == 1 ? 0 : pageNo - 1;
+  const skipCount = limitNo * reqPage;
+  return await fuelBalanceModel
+    .find(query)
+    .skip(skipCount)
+    .limit(limitNo)
+    .lean()
+    .populate("stationId")
+    .select("-__v");
 };

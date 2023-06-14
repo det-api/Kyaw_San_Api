@@ -5,6 +5,7 @@ import {
   addFuelIn,
   updateFuelIn,
   deleteFuelIn,
+  fuelInPaginate,
 } from "../service/fuelIn.service";
 
 export const getFuelInHandler = async (
@@ -13,12 +14,13 @@ export const getFuelInHandler = async (
   next: NextFunction
 ) => {
   try {
-    let result = await getFuelIn(req.query);
+    let pageNo = Number(req.params.page);
+    let result = await fuelInPaginate( pageNo , req.query);
     fMsg(res, "FuelIn are here", result);
   } catch (e) {
     next(new Error(e));
   }
-};
+}; 
 
 export const addFuelInHandler = async (
   req: Request,
