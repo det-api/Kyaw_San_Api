@@ -75,6 +75,7 @@ export const detailSalePaginate = async (
   const skipCount = limitNo * reqPage;
   return await detailSaleModel
     .find(query)
+    .sort({ createAt: -1 })
     .skip(skipCount)
     .limit(limitNo)
     .lean()
@@ -83,5 +84,5 @@ export const detailSalePaginate = async (
 };
 
 export const detailSaleCount = async () => {
- return await detailSaleModel.count();
+  return await detailSaleModel.count();
 };

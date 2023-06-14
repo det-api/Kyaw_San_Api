@@ -24,6 +24,7 @@ export const fuelInPaginate = async (
   const skipCount = limitNo * reqPage;
   return await fuelInModel
     .find(query)
+    .sort({ createAt: -1 })
     .skip(skipCount)
     .limit(limitNo)
     .lean()

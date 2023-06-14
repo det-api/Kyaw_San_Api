@@ -73,6 +73,7 @@ export const dailyReportPaginate = async (
   const skipCount = limitNo * reqPage;
   return await dailyReportModel
     .find(query)
+    .sort({ date: -1 })
     .skip(skipCount)
     .limit(limitNo)
     .lean()

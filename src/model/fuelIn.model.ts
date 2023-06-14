@@ -30,6 +30,7 @@ const fuelInSchema = new Schema({
   tank_balance: { type: Number, required: true },
   recive_balance: { type: Number, required: true },
   receive_date: { type: String, default: new Date() },
+  createAt: { type: Date, default: new Date() },
 });
 
 fuelInSchema.pre("save", function (next) {

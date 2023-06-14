@@ -94,6 +94,7 @@ export const fuelBalancePaginate = async (
   const skipCount = limitNo * reqPage;
   return await fuelBalanceModel
     .find(query)
+    .sort({ realTime: -1 })
     .skip(skipCount)
     .limit(limitNo)
     .lean()
@@ -104,4 +105,3 @@ export const fuelBalancePaginate = async (
 export const fuelBalanceCount = async () => {
   return await fuelBalanceModel.count();
 };
-
