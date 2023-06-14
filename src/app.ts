@@ -15,6 +15,7 @@ import { backup } from "./backup/backup";
 import { migrate } from "./migration/migrator";
 import { daily } from "./migration/dailyReport.migrate";
 import fuelBalanceRoute from "./router/fuelBalance.routes";
+import { fMsg2 } from "./utils/helper";
 
 const app = express();
 app.use(express.json());
@@ -50,14 +51,16 @@ app.use("/api/station-detail", stationDetailRoute);
 app.use("/api/daily-report", dailyReportRoute);
 app.use("/api/detail-sale", detailSaleRoute);
 app.use("/api/fuel-balance", fuelBalanceRoute);
-//Error Routes
 
+//Error Routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.dir(err.status);
   err.status = err.status || 409;
   res.status(err.status).json({
     con: false,
     msg: err.message,
   });
+  // fMsg2(res , err.status ,err.message)
 });
 
 //migrate

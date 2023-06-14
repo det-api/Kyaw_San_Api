@@ -7,6 +7,7 @@ import {
   updateFuelBalance,
   deleteFuelBalance,
   fuelBalancePaginate,
+  fuelBalanceCount,
 } from "../service/fuelBalance.service";
 import { fuelBalanceDocument } from "../model/fuelBalance.model";
 
@@ -37,10 +38,12 @@ export const getFuelBalanceHandler = async (
     if (!sDate) {
       throw new Error("you need date");
     }
-    // console.log(sDate);
 
     let final = await fuelBalancePaginate(pageNo, { createAt: sDate });
-    fMsg(res, "fuelBalance find", final);
+
+    let totalCount = await fuelBalanceCount();
+
+    fMsg(res, "fuelBalance find", final, totalCount);
   } catch (e) {
     next(new Error(e));
   }

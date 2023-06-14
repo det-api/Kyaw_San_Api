@@ -79,3 +79,7 @@ export const dailyReportPaginate = async (
     .populate("stationId")
     .select("-__v");
 };
+
+export const dailyReportCount = async () => {
+  return await dailyReportModel.count();
+};

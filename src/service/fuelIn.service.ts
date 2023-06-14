@@ -80,3 +80,8 @@ export const deleteFuelIn = async (query: FilterQuery<fuelInDocument>) => {
     throw new Error(e);
   }
 };
+
+export const fuelInCount = async () => {
+  return await fuelInModel.count();
+};
+

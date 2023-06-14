@@ -10,7 +10,12 @@ import { validateAll, validateToken } from "../middleware/validator";
 import { allSchemaId, fuelInSchema } from "../schema/scheama";
 const fuelInRoute = require("express").Router();
 
-fuelInRoute.get("/:page", getFuelInHandler);
+fuelInRoute.get(
+  "/:page",
+  // validateToken,
+  // hasAnyPermit(["view"]),
+  getFuelInHandler
+);
 
 fuelInRoute.post(
   "/",

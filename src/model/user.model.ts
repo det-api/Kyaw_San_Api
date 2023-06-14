@@ -25,11 +25,6 @@ const userSchema = new Schema(
     phone: { type: Number, required: true, unique: true },
     name: { type: String, required: true },
     password: { type: String, required: true },
-    // stationId: {
-    //   type: Schema.Types.ObjectId,
-    //   require: true,
-    //   ref: "stationDetail",
-    // },
     roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
     permits: [{ type: Schema.Types.ObjectId, ref: "permit" }],
   },

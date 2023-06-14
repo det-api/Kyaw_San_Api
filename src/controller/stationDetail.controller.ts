@@ -6,6 +6,7 @@ import {
   updateStationDetail,
   deleteStationDetail,
   stationDetailPaginate,
+  stationDetailCount,
 } from "../service/stationDetail.service";
 
 export const getStationDetailHandler = async (
@@ -17,7 +18,8 @@ export const getStationDetailHandler = async (
     let pageNo = Number(req.params.page);
 
     let result = await stationDetailPaginate(pageNo, req.query);
-    fMsg(res, "StationDetail are here", result);
+    let totalCount = await stationDetailCount();
+    fMsg(res, "StationDetail are here", result, totalCount);
   } catch (e) {
     next(new Error(e));
   }

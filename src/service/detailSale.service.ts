@@ -57,8 +57,6 @@ export const getDetailSaleByFuelType = async (
     dailyReportDate: dateOfDay,
     fuelType: fuelType,
   });
-
-
   let fuelLiter = fuel
     .map((ea) => ea["saleLiter"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
@@ -82,4 +80,8 @@ export const detailSalePaginate = async (
     .lean()
     .populate("stationDetailId")
     .select("-__v");
+};
+
+export const detailSaleCount = async () => {
+ return await detailSaleModel.count();
 };

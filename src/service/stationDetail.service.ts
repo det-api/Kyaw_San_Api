@@ -62,3 +62,7 @@ export const deleteStationDetail = async (
     throw new Error(e);
   }
 };
+
+export const stationDetailCount = async () => {
+  return await stationDetailModel.count();
+};

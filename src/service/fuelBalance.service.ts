@@ -100,3 +100,8 @@ export const fuelBalancePaginate = async (
     .populate("stationId")
     .select("-__v");
 };
+
+export const fuelBalanceCount = async () => {
+  return await fuelBalanceModel.count();
+};
+

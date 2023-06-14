@@ -6,6 +6,7 @@ import {
   updateDetailSale,
   deleteDetailSale,
   detailSalePaginate,
+  detailSaleCount,
 } from "../service/detailSale.service";
 import {
   addFuelBalance,
@@ -22,7 +23,8 @@ export const getDetailSaleHandler = async (
   try {
     let pageNo = Number(req.params.page);
     let result = await detailSalePaginate(pageNo, req.query);
-    fMsg(res, "DetailSale are here", result);
+    let totalDetailSale = await detailSaleCount();
+    fMsg(res, "DetailSale are here", result, totalDetailSale);
   } catch (e) {
     next(new Error(e));
   }
@@ -88,7 +90,11 @@ export const addDetailSaleHandler = async (
     }
 
     await calcFuelBalance(
-      { stationId:result.stationDetailId ,fuelType: result.fuelType, createAt: result.dailyReportDate },
+      {
+        stationId: result.stationDetailId,
+        fuelType: result.fuelType,
+        createAt: result.dailyReportDate,
+      },
       { liter: result.saleLiter },
       result.nozzleNo
     );

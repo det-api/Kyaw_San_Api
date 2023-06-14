@@ -7,6 +7,7 @@ import {
   deleteDailyReport,
   getDailyReportByDate,
   dailyReportPaginate,
+  dailyReportCount,
 } from "../service/dailyReport.service";
 import {
   getDetailSale,
@@ -43,7 +44,9 @@ export const getDailyReportHandler = async (
       })
     );
 
-    fMsg(res, "DailyReport are here", result);
+    let totalCount = await dailyReportCount();
+
+    fMsg(res, "DailyReport are here", result, totalCount);
   } catch (e) {
     next(new Error(e));
   }
@@ -141,6 +144,8 @@ export const getDailyReportByDateHandler = async (
         };
       })
     );
+    // let totalCount = await dailyReportCount();
+
     fMsg(res, "between two date", resultWithDetails);
   } catch (e) {
     next(new Error(e));
