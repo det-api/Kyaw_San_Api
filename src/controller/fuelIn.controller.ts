@@ -7,6 +7,7 @@ import {
   deleteFuelIn,
   fuelInPaginate,
   fuelInCount,
+  fuelInByDate,
 } from "../service/fuelIn.service";
 
 export const getFuelInHandler = async (
@@ -59,6 +60,32 @@ export const deleteFuelInHandler = async (
     await deleteFuelIn(req.query);
     fMsg(res, "FuelIn data was deleted");
   } catch (e) {
+    next(new Error(e));
+  }
+};
+
+export const getFuelInByDateHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try{
+    let sDate: any = req.query.sDate;
+  let eDate: any = req.query.eDate;
+
+  if (!sDate) {
+    throw new Error("you need date");
+  }
+  if (!eDate) {
+    eDate = new Date();
+  }
+  //if date error ? you should use split with T or be sure detail Id
+  const startDate : Date = new Date(sDate);
+  const endDate: Date = new Date(eDate);
+
+  let result = await fuelInByDate(startDate, endDate);
+  fMsg(res, "fuel balance between two date", result);
+  }catch(e){
     next(new Error(e));
   }
 };

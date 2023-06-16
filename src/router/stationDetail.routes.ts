@@ -13,17 +13,17 @@ const stationDetailRoute = require("express").Router();
 
 stationDetailRoute.get(
   "/:page",
-  // validateToken,
-  // hasAnyPermit(["view"]),
+  validateToken,
+  hasAnyPermit(["view"]),
   getStationDetailHandler
 );
 
 stationDetailRoute.post(
   "/",
-  // validateToken,
-  // validateAll(stationDetailSchema),
-  // roleValidator("admin"),
-  // hasAnyPermit(["add"]),
+  validateToken,
+  validateAll(stationDetailSchema),
+  roleValidator("admin"),
+  hasAnyPermit(["add"]),
   addStationDetailHandler
 );
 

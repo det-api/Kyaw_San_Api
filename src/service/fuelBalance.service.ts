@@ -105,3 +105,16 @@ export const fuelBalancePaginate = async (
 export const fuelBalanceCount = async () => {
   return await fuelBalanceModel.count();
 };
+
+export const fuelBalanceByDate = async (
+  d1: Date,
+  d2: Date
+): Promise<fuelBalanceDocument[]> => {
+  let result = await fuelBalanceModel.find({
+    realTime: {
+      $gt: d1,
+      $lt: d2,
+    },
+  });
+  return result;
+};

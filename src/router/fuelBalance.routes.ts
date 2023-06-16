@@ -2,6 +2,7 @@ import {
   addFuelBalanceHandler,
   deleteFuelBalanceHandler,
   getAllFuelBalanceHandler,
+  getFuelBalanceByDateHandler,
   getFuelBalanceHandler,
   updateFuelBalanceHandler,
 } from "../controller/fuelBalance.controller";
@@ -12,22 +13,28 @@ const fuelBalanceRoute = require("express").Router();
 
 fuelBalanceRoute.get(
   "/all",
-  // validateToken,
-  // hasAnyPermit(["view"]),
+  validateToken,
+  hasAnyPermit(["view"]),
   getAllFuelBalanceHandler
 );
 
 fuelBalanceRoute.get(
-  "/:page",
-  // validateToken,
-  // hasAnyPermit(["view"]),
+  "/pagi/:page",
+  validateToken,
+  hasAnyPermit(["view"]),
   getFuelBalanceHandler
+);
+fuelBalanceRoute.get(
+  "/by-date",
+  validateToken,
+  hasAnyPermit(["view"]),
+  getFuelBalanceByDateHandler
 );
 fuelBalanceRoute.post(
   "/",
-  // validateToken,
-  // roleValidator("admin"),
-  // hasAnyPermit(["add"]),
+  validateToken,
+  roleValidator("admin"),
+  hasAnyPermit(["add"]),
   addFuelBalanceHandler
 );
 
@@ -41,9 +48,9 @@ fuelBalanceRoute.patch(
 
 fuelBalanceRoute.delete(
   "/",
-  // validateToken,
-  // roleValidator("admin"),
-  // hasAnyPermit(["delete"]),
+  validateToken,
+  roleValidator("admin"),
+  hasAnyPermit(["delete"]),
   deleteFuelBalanceHandler
 );
 

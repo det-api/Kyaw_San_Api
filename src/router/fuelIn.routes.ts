@@ -1,6 +1,7 @@
 import {
   addFuelInHandler,
   deleteFuelInHandler,
+  getFuelInByDateHandler,
   getFuelInHandler,
   updateFuelInHandler,
 } from "../controller/fuelIn.controller";
@@ -11,17 +12,24 @@ import { allSchemaId, fuelInSchema } from "../schema/scheama";
 const fuelInRoute = require("express").Router();
 
 fuelInRoute.get(
-  "/:page",
-  // validateToken,
-  // hasAnyPermit(["view"]),
+  "/pagi/:page",
+  validateToken,
+  hasAnyPermit(["view"]),
   getFuelInHandler
+);
+
+fuelInRoute.get(
+  "/by-date",
+  validateToken,
+  hasAnyPermit(["view"]),
+  getFuelInByDateHandler
 );
 
 fuelInRoute.post(
   "/",
-  // validateToken,
-  // roleValidator("admin"),
-  // hasAnyPermit(["add"]),
+  validateToken,
+  roleValidator("admin"),
+  hasAnyPermit(["add"]),
   addFuelInHandler
 );
 fuelInRoute.patch(

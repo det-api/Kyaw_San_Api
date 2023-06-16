@@ -86,3 +86,15 @@ export const fuelInCount = async () => {
   return await fuelInModel.count();
 };
 
+export const fuelInByDate = async (
+  d1: Date,
+  d2: Date
+): Promise<fuelInDocument[]> => {
+  let result = await fuelInModel.find({
+    createAt: {
+      $gt: d1,
+      $lt: d2,
+    },
+  });
+  return result;
+};

@@ -1,6 +1,7 @@
 import {
   addDetailSaleHandler,
   deleteDetailSaleHandler,
+  getDetailSaleByDate,
   getDetailSaleHandler,
   updateDetailSaleHandler,
 } from "../controller/detailSale.controller";
@@ -13,11 +14,13 @@ import { allSchemaId, detailSaleSchema } from "../schema/scheama";
 const detailSaleRoute = require("express").Router();
 
 detailSaleRoute.get(
-  "/:page",
-  // validateToken,
-  // hasAnyPermit(["view"]),
+  "/pagi/:page",
+  validateToken,
+  hasAnyPermit(["view"]),
   getDetailSaleHandler
 );
+
+detailSaleRoute.get("/by-date" , getDetailSaleByDate)
 
 //that for only device
 detailSaleRoute.post("/", addDetailSaleHandler);
@@ -25,10 +28,10 @@ detailSaleRoute.patch("/", updateDetailSaleHandler);
 
 detailSaleRoute.delete(
   "/",
-  // validateToken,
-  // roleValidator("admin"),
-  // hasAnyPermit(["delete"]),
-  // validateAll(allSchemaId),
+  validateToken,
+  roleValidator("admin"),
+  hasAnyPermit(["delete"]),
+  validateAll(allSchemaId),
   deleteDetailSaleHandler
 );
 

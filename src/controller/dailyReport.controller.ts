@@ -97,21 +97,23 @@ export const getDailyReportByDateHandler = async (
   next: NextFunction
 ) => {
   try {
-    let sDate = req.query.sDate;
-    let eDate = req.query.eDate;
+    let sDate: any = req.query.sDate;
+    let eDate: any = req.query.eDate;
+
     let result;
     if (!sDate) {
       throw new Error("you need date");
     }
     if (!eDate) {
-      eDate = new Date().toLocaleDateString(`fr-CA`);
+      eDate = new Date();
     }
-    if (typeof sDate === "string" && typeof eDate === "string") {
-      //if date error ? you should use split with T or be sure detail Id
-      const startDate = new Date(sDate).toLocaleDateString(`fr-CA`);
-      const endDate = new Date(eDate).toLocaleDateString(`fr-CA`);
-      result = await getDailyReportByDate(startDate, endDate);
-    }
+    // console.log("drp");
+    //if date error ? you should use split with T or be sure detail Id
+    const startDate : Date = new Date(sDate);
+    const endDate : Date = new Date(eDate);
+    
+    result = await getDailyReportByDate(startDate, endDate);
+
     const resultWithDetails = await Promise.all(
       result.map(async (ea) => {
         ea["ninety-two"] = await getDetailSaleByFuelType(
@@ -144,7 +146,6 @@ export const getDailyReportByDateHandler = async (
         };
       })
     );
-    // let totalCount = await dailyReportCount();
 
     fMsg(res, "between two date", resultWithDetails);
   } catch (e) {

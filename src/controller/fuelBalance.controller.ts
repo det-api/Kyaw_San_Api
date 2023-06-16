@@ -8,6 +8,7 @@ import {
   deleteFuelBalance,
   fuelBalancePaginate,
   fuelBalanceCount,
+  fuelBalanceByDate,
 } from "../service/fuelBalance.service";
 import { fuelBalanceDocument } from "../model/fuelBalance.model";
 
@@ -88,21 +89,27 @@ export const deleteFuelBalanceHandler = async (
   }
 };
 
-// export const getFuelBalanceByDateHandler = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     let sDate = req.query.sDate?.toLocaleString();
-//     let eDate = req.query.eDate?.toLocaleString();
+export const getFuelBalanceByDateHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let sDate: any = req.query.sDate;
+    let eDate: any = req.query.eDate;
 
-//     if (!sDate || !eDate) {
-//       throw new Error("you need date");
-//     }
-
-//     let startDate = new Date(sDate)
-//     let endDate = new Date(eDate)
-
-//   } catch (e) {}
-// };
+    if (!sDate) {
+      throw new Error("you need date");
+    }
+    if (!eDate) {
+      eDate = new Date();
+    }
+    //if date error ? you should use split with T or be sure detail Id
+    const startDate: Date = new Date(sDate);
+    const endDate: Date = new Date(eDate);
+    let result = await fuelBalanceByDate(startDate, endDate);
+    fMsg(res, "fuel balance between two date", result);
+  } catch (e) {
+    next(new Error(e));
+  }
+};

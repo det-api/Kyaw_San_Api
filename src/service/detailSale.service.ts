@@ -1,6 +1,5 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
 import detailSaleModel, { detailSaleDocument } from "../model/detailSale.model";
-import { calcFuelBalance } from "./fuelBalance.service";
 import config from "config";
 
 export const getDetailSale = async (query: FilterQuery<detailSaleDocument>) => {
@@ -85,4 +84,26 @@ export const detailSalePaginate = async (
 
 export const detailSaleCount = async () => {
   return await detailSaleModel.count();
+};
+// that is testing
+
+// export const detailSaleByDate = async (sDate, eDate) => {
+//   console.log(new Date(sDate), new Date(eDate));
+//   let result = await detailSaleModel.find({
+//     createAt: { $gt: new Date(sDate), $lt: new Date(eDate) },
+//   });
+//   console.log(result);
+// };
+
+export const detailSaleByDate = async (
+  d1: Date,
+  d2: Date
+): Promise<detailSaleDocument[]> => {
+  let result = await detailSaleModel.find({
+    createAt: {
+      $gt: d1,
+      $lt: d2,
+    },
+  });
+  return result;
 };

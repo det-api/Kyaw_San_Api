@@ -55,11 +55,11 @@ export const deleteDailyReport = async (
 };
 
 export const getDailyReportByDate = async (
-  d1: any,
-  d2: any
+  d1: Date,
+  d2: Date
 ): Promise<dailyReportDocument[]> => {
   let result = await dailyReportModel.find({
-    date: { $gte: `${d1}T00:00:00Z`, $lte: `${d2}T23:59:59Z` },
+    date: { $gte: d1, $lte: d2 },
   });
   return result;
 };

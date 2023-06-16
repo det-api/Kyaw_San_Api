@@ -15,7 +15,7 @@ import { backup } from "./backup/backup";
 import { migrate } from "./migration/migrator";
 import { daily } from "./migration/dailyReport.migrate";
 import fuelBalanceRoute from "./router/fuelBalance.routes";
-import { fMsg2 } from "./utils/helper";
+// import { fMsg2 } from "./utils/helper";
 
 const app = express();
 app.use(express.json());
