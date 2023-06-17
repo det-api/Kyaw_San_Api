@@ -181,7 +181,7 @@ export const getDetailSaleDatePagiHandler = async (
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
     let result = await detailSaleByDateAndPagi(startDate, endDate, pageNo);
-    let totalDetailSale = await detailSaleCount();
+    let totalDetailSale = result.length;
 
     fMsg(res, "detail sale between two date", result, totalDetailSale);
   } catch (e) {
