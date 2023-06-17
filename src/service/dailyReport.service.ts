@@ -23,7 +23,6 @@ export const addDailyReport = async (body: dailyReportDocument | {}) => {
     console.log("create one");
     return await new dailyReportModel(body).save();
   } catch (e) {
-    // console.log("e")
     throw new Error(e);
   }
 };
@@ -58,9 +57,13 @@ export const getDailyReportByDate = async (
   d1: Date,
   d2: Date
 ): Promise<dailyReportDocument[]> => {
-  let result = await dailyReportModel.find({
-    date: { $gte: d1, $lte: d2 },
-  });
+  let result = await dailyReportModel
+    .find({
+      date: { $gte: d1, $lte: d2 },
+    })
+    .sort({ date: -1 })
+    .populate("stationId")
+    .select("-__v");
   return result;
 };
 

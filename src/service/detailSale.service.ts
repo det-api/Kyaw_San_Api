@@ -2,6 +2,8 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 import detailSaleModel, { detailSaleDocument } from "../model/detailSale.model";
 import config from "config";
 
+const limitNo = config.get<number>("page_limit");
+
 export const getDetailSale = async (query: FilterQuery<detailSaleDocument>) => {
   try {
     return await detailSaleModel
@@ -69,7 +71,6 @@ export const detailSalePaginate = async (
   pageNo: number,
   query: FilterQuery<detailSaleDocument>
 ) => {
-  const limitNo = config.get<number>("page_limit");
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
   return await detailSaleModel
@@ -99,11 +100,40 @@ export const detailSaleByDate = async (
   d1: Date,
   d2: Date
 ): Promise<detailSaleDocument[]> => {
-  let result = await detailSaleModel.find({
-    createAt: {
-      $gt: d1,
-      $lt: d2,
-    },
-  });
+  let result = await detailSaleModel
+    .find({
+      createAt: {
+        $gt: d1,
+        $lt: d2,
+      },
+    })
+    .sort({ createAt: -1 })
+    .populate("stationDetailId")
+    .select("-__v");
+
+  return result;
+};
+
+export const detailSaleByDateAndPagi = async (
+  d1: Date,
+  d2: Date,
+  pageNo : number
+): Promise<detailSaleDocument[]> => {
+  const reqPage = pageNo == 1 ? 0 : pageNo - 1;
+  const skipCount = limitNo * reqPage;
+  let result = await detailSaleModel
+    .find({
+      createAt: {
+        $gt: d1,
+        $lt: d2,
+      },
+    })
+    .sort({ createAt: -1 })
+    .skip(skipCount)
+    .limit(limitNo)
+    .lean()
+    .populate("stationDetailId")
+    .select("-__v");
+
   return result;
 };

@@ -40,7 +40,6 @@ export const addFuelIn = async (body: fuelInDocument) => {
       tankNo: body.tankNo,
       createAt: body.receive_date,
     });
-    // console.log(tankCondition)
 
     const updatedBody = {
       ...body,
@@ -90,11 +89,15 @@ export const fuelInByDate = async (
   d1: Date,
   d2: Date
 ): Promise<fuelInDocument[]> => {
-  let result = await fuelInModel.find({
-    createAt: {
-      $gt: d1,
-      $lt: d2,
-    },
-  });
+  let result = await fuelInModel
+    .find({
+      createAt: {
+        $gt: d1,
+        $lt: d2,
+      },
+    })
+    .sort({ createAt: -1 })
+    .populate("stationId")
+    .select("-__v");
   return result;
 };

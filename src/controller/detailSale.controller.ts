@@ -8,6 +8,7 @@ import {
   detailSalePaginate,
   detailSaleCount,
   detailSaleByDate,
+  detailSaleByDateAndPagi,
   // detailSaleByDate,
 } from "../service/detailSale.service";
 import {
@@ -135,7 +136,7 @@ export const deleteDetailSaleHandler = async (
 
 //get detail sale between two date
 
-export const getDetailSaleByDate = async (
+export const getDetailSaleByDateHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -150,12 +151,39 @@ export const getDetailSaleByDate = async (
     if (!eDate) {
       eDate = new Date();
     }
-    // console.log("drp");
     //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
     let result = await detailSaleByDate(startDate, endDate);
     fMsg(res, "detail sale between two date", result);
+  } catch (e) {
+    next(new Error(e));
+  }
+};
+
+export const getDetailSaleDatePagiHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let sDate: any = req.query.sDate;
+    let eDate: any = req.query.eDate;
+    let pageNo: number = Number(req.params.page);
+
+    if (!sDate) {
+      throw new Error("you need date");
+    }
+    if (!eDate) {
+      eDate = new Date();
+    }
+    //if date error ? you should use split with T or be sure detail Id
+    const startDate: Date = new Date(sDate);
+    const endDate: Date = new Date(eDate);
+    let result = await detailSaleByDateAndPagi(startDate, endDate, pageNo);
+    let totalDetailSale = await detailSaleCount();
+
+    fMsg(res, "detail sale between two date", result, totalDetailSale);
   } catch (e) {
     next(new Error(e));
   }

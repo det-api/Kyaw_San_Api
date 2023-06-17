@@ -1,7 +1,8 @@
 import {
   addDetailSaleHandler,
   deleteDetailSaleHandler,
-  getDetailSaleByDate,
+  getDetailSaleByDateHandler,
+  getDetailSaleDatePagiHandler,
   getDetailSaleHandler,
   updateDetailSaleHandler,
 } from "../controller/detailSale.controller";
@@ -20,8 +21,19 @@ detailSaleRoute.get(
   getDetailSaleHandler
 );
 
-detailSaleRoute.get("/by-date" , getDetailSaleByDate)
+detailSaleRoute.get(
+  "/by-date",
+  validateToken,
+  hasAnyPermit(["view"]),
+  getDetailSaleByDateHandler
+);
 
+detailSaleRoute.get(
+  "/pagi/by-date/:page",
+  validateToken,
+  hasAnyPermit(["view"]),
+  getDetailSaleDatePagiHandler
+);
 //that for only device
 detailSaleRoute.post("/", addDetailSaleHandler);
 detailSaleRoute.patch("/", updateDetailSaleHandler);

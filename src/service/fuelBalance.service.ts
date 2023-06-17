@@ -20,8 +20,6 @@ export const getFuelBalance = async (
 
 export const addFuelBalance = async (body: fuelBalanceDocument) => {
   try {
-    console.log("HREE");
-    // console.log(body);
     return await new fuelBalanceModel(body).save();
   } catch (e) {
     throw new Error(e);
@@ -86,9 +84,7 @@ export const fuelBalancePaginate = async (
   pageNo: number,
   query: FilterQuery<fuelBalanceDocument>
 ) => {
-  // console.log(query);/
   let result = await fuelBalanceModel.find(query);
-  // console.log(result);
   const limitNo = config.get<number>("page_limit");
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
@@ -110,11 +106,15 @@ export const fuelBalanceByDate = async (
   d1: Date,
   d2: Date
 ): Promise<fuelBalanceDocument[]> => {
-  let result = await fuelBalanceModel.find({
-    realTime: {
-      $gt: d1,
-      $lt: d2,
-    },
-  });
+  let result = await fuelBalanceModel
+    .find({
+      realTime: {
+        $gt: d1,
+        $lt: d2,
+      },
+    })
+    .sort({ realTime: -1 })
+    .populate("stationId")
+    .select("-__v");
   return result;
 };
