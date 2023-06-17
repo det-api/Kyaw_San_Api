@@ -23,11 +23,10 @@ export const userRoleSchema = object({
   }),
 });
 
-
 export const userPermitSchema = object({
   body: object({
-    userId : string().regex(/^[0-9a-fA-F]{24}$/, "invlid id"),
-    permitId : string().regex(/^[0-9a-fA-F]{24}$/, "invlid id"),
+    userId: string().regex(/^[0-9a-fA-F]{24}$/, "invlid id"),
+    permitId: string().regex(/^[0-9a-fA-F]{24}$/, "invlid id"),
   }),
 });
 
@@ -51,6 +50,10 @@ export const createUserSchema = object({
     name: string({
       required_error: "Name is required",
     }),
+    stationId: string({
+      required_error: "You need station's id",
+    }).regex(/^[0-9a-fA-F]{24}$/, "invlid id"),
+
     password: string({
       required_error: "Password is required",
     }).min(6, "Passwrod too short should be 6 characters minimum"),

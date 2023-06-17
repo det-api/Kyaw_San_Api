@@ -4,6 +4,7 @@ import { encode } from "../utils/helper";
 import { permitDocument } from "./permit.model";
 import { roleDocument } from "./role.model";
 import bcrypt from "bcryptjs";
+import { stationDetailDocument } from "./stationDetail.model";
 
 export interface UserInput {
   email: string;
@@ -15,6 +16,7 @@ export interface UserInput {
 export interface UserDocument extends UserInput, mongoose.Document {
   roles: roleDocument["_id"];
   permits: permitDocument["_id"];
+  stationId: stationDetailDocument["_id"];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,6 +27,7 @@ const userSchema = new Schema(
     phone: { type: Number, required: true, unique: true },
     name: { type: String, required: true },
     password: { type: String, required: true },
+    stationId: { type: Schema.Types.ObjectId, required: true },
     roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
     permits: [{ type: Schema.Types.ObjectId, ref: "permit" }],
   },

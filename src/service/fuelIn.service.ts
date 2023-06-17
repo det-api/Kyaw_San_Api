@@ -32,10 +32,11 @@ export const fuelInPaginate = async (
     .select("-__v");
 };
 
-export const addFuelIn = async (body: fuelInDocument) => {
+export const addFuelIn = async (body: any) => {
   try {
     let no = await fuelInModel.count();
     let tankCondition = await getFuelBalance({
+      stationId: body.user[0].stationId,
       fuelType: body.fuel_type,
       tankNo: body.tankNo,
       createAt: body.receive_date,
@@ -43,6 +44,7 @@ export const addFuelIn = async (body: fuelInDocument) => {
 
     const updatedBody = {
       ...body,
+      stationId : body.user[0].stationId,
       fuel_in_code: no + 1,
       tank_balance: tankCondition[0].balance,
     };
