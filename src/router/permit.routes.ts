@@ -9,7 +9,12 @@ import { allSchemaId, permitSchema } from "../schema/scheama";
 
 const permitRoute = require("express").Router();
 
-permitRoute.get("/", validateToken, roleValidator("admin"), getPermitHandler);
+permitRoute.get(
+  "/",
+  // validateToken,
+  // roleValidator("admin"),
+  getPermitHandler
+);
 permitRoute.post(
   "/",
   validateToken,
