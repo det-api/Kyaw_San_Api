@@ -30,8 +30,8 @@ detailSaleRoute.get(
 
 detailSaleRoute.get(
   "/pagi/by-date/:page",
-  // validateToken,
-  // hasAnyPermit(["view"]),
+  validateToken,
+  hasAnyPermit(["view"]),
   getDetailSaleDatePagiHandler
 );
 //that for only device

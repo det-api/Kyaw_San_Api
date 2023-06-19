@@ -118,22 +118,46 @@ export const detailSaleByDateAndPagi = async (
   d1: Date,
   d2: Date,
   pageNo : number
-): Promise<detailSaleDocument[]> => {
+): Promise<{ count: number, data: detailSaleDocument[] }> => {
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
-  let result = await detailSaleModel
-    .find({
-      createAt: {
-        $gt: d1,
-        $lt: d2,
-      },
-    })
-    .sort({ createAt: -1 })
-    .skip(skipCount)
-    .limit(limitNo)
-    .lean()
-    .populate("stationDetailId")
-    .select("-__v");
+  // let result = await detailSaleModel
+  //   .find({
+  //     createAt: {
+  //       $gt: d1,
+  //       $lt: d2,
+  //     },
+  //   })
+  //   .sort({ createAt: -1 })
+  //   .skip(skipCount)
+  //   .limit(limitNo)
+  //   .lean()
+  //   .populate("stationDetailId")
+  //   .select("-__v");
 
-  return result;
+  const [data, count] = await Promise.all([
+    detailSaleModel
+      .find({
+        createAt: {
+          $gt: d1,
+          $lt: d2,
+        },
+      })
+      .sort({ createAt: -1 })
+      .skip(skipCount)
+      .limit(limitNo)
+      .lean()
+      .populate("stationDetailId")
+      .select("-__v"),
+
+    detailSaleModel
+      .countDocuments({
+        createAt: {
+          $gt: d1,
+          $lt: d2,
+        },
+      })
+  ]);
+
+  return {data , count};
 };

@@ -180,10 +180,9 @@ export const getDetailSaleDatePagiHandler = async (
     //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
-    let result = await detailSaleByDateAndPagi(startDate, endDate, pageNo);
-    let totalDetailSale = result.length;
+    let {data , count} = await detailSaleByDateAndPagi(startDate, endDate, pageNo);
 
-    fMsg(res, "detail sale between two date", result, totalDetailSale);
+    fMsg(res, "detail sale between two date", data, count);
   } catch (e) {
     next(new Error(e));
   }
