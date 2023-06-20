@@ -13,8 +13,8 @@ const roleRoute = require("express").Router();
 
 roleRoute.get(
   "/",
-  //  validateToken,
-  // roleValidator("admin"),
+   validateToken,
+  roleValidator("admin"),
   getRoleHandler
 );
 

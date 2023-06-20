@@ -3,6 +3,7 @@ import dailyReportModel, {
   dailyReportDocument,
 } from "../model/dailyReport.model";
 import config from "config";
+const limitNo = config.get<number>("page_limit");
 
 export const getDailyReport = async (
   query: FilterQuery<dailyReportDocument>
@@ -54,14 +55,28 @@ export const deleteDailyReport = async (
 };
 
 export const getDailyReportByDate = async (
+  query : FilterQuery<dailyReportDocument>,
   d1: Date,
-  d2: Date
+  d2: Date,
+  pageNo : number
 ): Promise<dailyReportDocument[]> => {
+
+  const reqPage = pageNo == 1 ? 0 : pageNo - 1;
+  const skipCount = limitNo * reqPage;
+
+  const filter: FilterQuery<dailyReportDocument> = {
+    ...query,
+    date: {
+      $gt: d1,
+      $lt: d2,
+    },
+  };
+
   let result = await dailyReportModel
-    .find({
-      date: { $gte: d1, $lte: d2 },
-    })
+    .find(filter)
     .sort({ date: -1 })
+    .skip(skipCount)
+    .limit(limitNo)
     .populate("stationId")
     .select("-__v");
   return result;
@@ -71,15 +86,14 @@ export const dailyReportPaginate = async (
   pageNo: number,
   query: FilterQuery<dailyReportDocument>
 ) => {
-  const limitNo = config.get<number>("page_limit");
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
+
   return await dailyReportModel
     .find(query)
     .sort({ date: -1 })
     .skip(skipCount)
     .limit(limitNo)
-    .lean()
     .populate("stationId")
     .select("-__v");
 };

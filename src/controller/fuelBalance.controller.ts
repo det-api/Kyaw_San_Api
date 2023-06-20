@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, query } from "express";
 import fMsg, { previous } from "../utils/helper";
 import moment, { MomentTimezone } from "moment-timezone";
 import {
@@ -98,16 +98,20 @@ export const getFuelBalanceByDateHandler = async (
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
 
+    delete req.query.sDate;
+    delete req.query.eDate;
+
+    let query = req.query;
+
     if (!sDate) {
       throw new Error("you need date");
     }
     if (!eDate) {
       eDate = new Date();
     }
-    //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
-    let result = await fuelBalanceByDate(startDate, endDate);
+    let result = await fuelBalanceByDate(query, startDate, endDate);
     fMsg(res, "fuel balance between two date", result);
   } catch (e) {
     next(new Error(e));

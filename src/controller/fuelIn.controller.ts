@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, query } from "express";
 import fMsg from "../utils/helper";
 import {
   getFuelIn,
@@ -73,6 +73,11 @@ export const getFuelInByDateHandler = async (
     let sDate: any = req.query.sDate;
   let eDate: any = req.query.eDate;
 
+  delete req.query.sDate;
+  delete req.query.eDate;
+
+  let query = req.query;
+
   if (!sDate) {
     throw new Error("you need date");
   }
@@ -83,7 +88,7 @@ export const getFuelInByDateHandler = async (
   const startDate : Date = new Date(sDate);
   const endDate: Date = new Date(eDate);
 
-  let result = await fuelInByDate(startDate, endDate);
+  let result = await fuelInByDate(query ,startDate, endDate);
   fMsg(res, "fuel balance between two date", result);
   }catch(e){
     next(new Error(e));

@@ -23,7 +23,30 @@ export const getDailyReportHandler = async (
     let pageNo = Number(req.params.page);
 
     let result = await dailyReportPaginate(pageNo, req.query);
-    await Promise.all(
+    // console.log(result);
+    // await Promise.all(
+    //   result.map(async (ea) => {
+    //     ea["ninety-two"] = await getDetailSaleByFuelType(
+    //       ea["dateOfDay"],
+    //       // ea["stationId"],
+    //       "001-Octane Ron(92)"
+    //     );
+    //     ea["ninety-five"] = await getDetailSaleByFuelType(
+    //       ea["dateOfDay"],
+    //       "002-Octane Ron(95)"
+    //     );
+    //     ea["HSD"] = await getDetailSaleByFuelType(
+    //       ea["dateOfDay"],
+    //       "004-Diesel"
+    //     );
+    //     ea["PHSD"] = await getDetailSaleByFuelType(
+    //       ea["dateOfDay"],
+    //       "005-Premium Diesel"
+    //     );
+    //   })
+    // );
+    
+    const resultWithDetails = await Promise.all(
       result.map(async (ea) => {
         ea["ninety-two"] = await getDetailSaleByFuelType(
           ea["dateOfDay"],
@@ -41,12 +64,25 @@ export const getDailyReportHandler = async (
           ea["dateOfDay"],
           "005-Premium Diesel"
         );
+        return {
+          _id: ea["_id"],
+          stationId: ea["stationId"],
+          allTotalLizerLiter: ea["allTotalLizerLiter"],
+          allTotalLizerPriallTotalLizerLiterce: ea["allTotalLizerPrice"],
+          date: ea["date"],
+          prices: ea["prices"],
+          "ninety-two": ea["ninety-two"],
+          "ninety-five": ea["ninety-five"],
+          HSD: ea["HSD"],
+          PHSD: ea["PHSD"],
+        };
       })
     );
 
+
     let totalCount = await dailyReportCount();
 
-    fMsg(res, "DailyReport are here", result, totalCount);
+    fMsg(res, "DailyReport are here", resultWithDetails, totalCount);
   } catch (e) {
     next(new Error(e));
   }
@@ -55,7 +91,7 @@ export const getDailyReportHandler = async (
 export const addDailyReportHandler = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction 
 ) => {
   try {
     let result = await addDailyReport(req.body);
@@ -99,6 +135,12 @@ export const getDailyReportByDateHandler = async (
   try {
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
+    let pageNo: number = Number(req.params.page);
+
+    delete req.query.sDate;
+    delete req.query.eDate;
+
+    let query = req.query;
 
     let result;
     if (!sDate) {
@@ -109,11 +151,11 @@ export const getDailyReportByDateHandler = async (
     }
     // console.log("drp");
     //if date error ? you should use split with T or be sure detail Id
-    const startDate : Date = new Date(sDate);
-    const endDate : Date = new Date(eDate);
-    
-    result = await getDailyReportByDate(startDate, endDate);
+    const startDate: Date = new Date(sDate);
+    const endDate: Date = new Date(eDate);
 
+    result = await getDailyReportByDate(query, startDate, endDate, pageNo);
+    // console.log(result);
     const resultWithDetails = await Promise.all(
       result.map(async (ea) => {
         ea["ninety-two"] = await getDetailSaleByFuelType(

@@ -45,7 +45,7 @@ dailyReportRoute.delete(
 );
 
 dailyReportRoute.get(
-  "/by-date",
+  "/by-date/:page",
   validateToken,
   hasAnyPermit(["view"]),
   getDailyReportByDateHandler

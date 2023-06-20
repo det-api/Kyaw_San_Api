@@ -57,10 +57,10 @@ userRoute.get("/admin", validateToken, getUserByAdminHandler);
 //adding role in user
 userRoute.patch(
   "/add/role",
-  // validateToken,
-  // validateAll(userRoleSchema),
-  // roleValidator("admin"),
-  // hasAnyPermit(["add"]),
+  validateToken,
+  validateAll(userRoleSchema),
+  roleValidator("admin"),
+  hasAnyPermit(["add"]),
   userAddRoleHandler
 );
 
@@ -76,10 +76,10 @@ userRoute.patch(
 //adding permit in user
 userRoute.patch(
   "/add/permit",
-  // validateToken,
-  // validateAll(userPermitSchema),
-  // roleValidator("admin"),
-  // hasAnyPermit(["add"]),
+  validateToken,
+  validateAll(userPermitSchema),
+  roleValidator("admin"),
+  hasAnyPermit(["add"]),
   userAddPermitHandler
 );
 userRoute.patch(

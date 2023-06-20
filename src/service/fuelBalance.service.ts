@@ -103,18 +103,23 @@ export const fuelBalanceCount = async () => {
 };
 
 export const fuelBalanceByDate = async (
+  query: FilterQuery<fuelBalanceDocument>,
   d1: Date,
   d2: Date
 ): Promise<fuelBalanceDocument[]> => {
+  const filter: FilterQuery<fuelBalanceDocument> = {
+    ...query,
+    realTime: {
+      $gt: d1,
+      $lt: d2,
+    },
+  };
+
   let result = await fuelBalanceModel
-    .find({
-      realTime: {
-        $gt: d1,
-        $lt: d2,
-      },
-    })
+    .find(filter)
     .sort({ realTime: -1 })
     .populate("stationId")
     .select("-__v");
+
   return result;
 };

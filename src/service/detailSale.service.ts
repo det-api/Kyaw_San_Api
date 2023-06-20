@@ -4,7 +4,6 @@ import config from "config";
 
 const limitNo = config.get<number>("page_limit");
 
-
 export const getDetailSale = async (query: FilterQuery<detailSaleDocument>) => {
   try {
     return await detailSaleModel
@@ -53,18 +52,22 @@ export const deleteDetailSale = async (
 
 export const getDetailSaleByFuelType = async (
   dateOfDay: string,
+  // stationId : string,
   fuelType: string
 ) => {
+  // console.log(dateOfDay);
   let fuel = await getDetailSale({
     dailyReportDate: dateOfDay,
     fuelType: fuelType,
   });
+
   let fuelLiter = fuel
     .map((ea) => ea["saleLiter"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
   let fuelAmount = fuel
     .map((ea) => ea["totalPrice"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
+
   return { count: fuel.length, liter: fuelLiter, price: fuelAmount };
 };
 
@@ -98,16 +101,20 @@ export const detailSaleCount = async () => {
 // };
 
 export const detailSaleByDate = async (
+  query: FilterQuery<detailSaleDocument>,
   d1: Date,
   d2: Date
 ): Promise<detailSaleDocument[]> => {
+  const filter: FilterQuery<detailSaleDocument> = {
+    ...query,
+    createAt: {
+      $gt: d1,
+      $lt: d2,
+    },
+  };
+
   let result = await detailSaleModel
-    .find({
-      createAt: {
-        $gt: d1,
-        $lt: d2,
-      },
-    })
+    .find(filter)
     .sort({ createAt: -1 })
     .populate("stationDetailId")
     .select("-__v");

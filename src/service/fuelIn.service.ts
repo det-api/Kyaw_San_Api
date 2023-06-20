@@ -88,16 +88,21 @@ export const fuelInCount = async () => {
 };
 
 export const fuelInByDate = async (
+  query :  FilterQuery<fuelInDocument>,
   d1: Date,
   d2: Date
 ): Promise<fuelInDocument[]> => {
+
+  const filter: FilterQuery<fuelInDocument> = {
+    ...query,
+    createAt: {
+      $gt: d1,
+      $lt: d2,
+    },
+  };
+
   let result = await fuelInModel
-    .find({
-      createAt: {
-        $gt: d1,
-        $lt: d2,
-      },
-    })
+    .find(filter)
     .sort({ createAt: -1 })
     .populate("stationId")
     .select("-__v");
