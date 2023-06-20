@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, query } from "express";
 import fMsg, { previous } from "../utils/helper";
 import {
   getDetailSale,
@@ -171,6 +171,13 @@ export const getDetailSaleDatePagiHandler = async (
     let eDate: any = req.query.eDate;
     let pageNo: number = Number(req.params.page);
 
+    delete req.query.sDate;
+    delete req.query.eDate;
+
+    let query = req.query;
+
+    // console.log(query);
+
     if (!sDate) {
       throw new Error("you need date");
     }
@@ -180,7 +187,12 @@ export const getDetailSaleDatePagiHandler = async (
     //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
-    let {data , count} = await detailSaleByDateAndPagi(startDate, endDate, pageNo);
+    let { data, count } = await detailSaleByDateAndPagi(
+      query,
+      startDate,
+      endDate,
+      pageNo
+    );
 
     fMsg(res, "detail sale between two date", data, count);
   } catch (e) {

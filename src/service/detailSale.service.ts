@@ -4,11 +4,12 @@ import config from "config";
 
 const limitNo = config.get<number>("page_limit");
 
+
 export const getDetailSale = async (query: FilterQuery<detailSaleDocument>) => {
   try {
     return await detailSaleModel
       .find(query)
-      .lean()
+
       .populate("stationDetailId")
       .select("-__v");
   } catch (e) {
@@ -30,7 +31,7 @@ export const updateDetailSale = async (
 ) => {
   try {
     await detailSaleModel.updateMany(query, body);
-    return await detailSaleModel.find(query).lean();
+    return await detailSaleModel.find(query);
   } catch (e) {
     throw new Error(e);
   }
@@ -78,7 +79,7 @@ export const detailSalePaginate = async (
     .sort({ createAt: -1 })
     .skip(skipCount)
     .limit(limitNo)
-    .lean()
+
     .populate("stationDetailId")
     .select("-__v");
 };
@@ -114,50 +115,76 @@ export const detailSaleByDate = async (
   return result;
 };
 
+// export const detailSaleByDateAndPagi = async (
+//   query: FilterQuery<detailSaleDocument>,
+//   d1: Date,
+//   d2: Date,
+//   pageNo: number
+// ): Promise<{ count: number; data: detailSaleDocument[] }> => {
+// const limitNo = config.get<number>("page_limit");
+
+//   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
+//   const skipCount = 50 * reqPage;
+
+//   const filter: FilterQuery<detailSaleDocument> = {
+//     ...query,
+//     createAt: {
+//       $gt: d1,
+//       $lt: d2,
+//     },
+//   };
+
+//   const [data, count] = await Promise.all([
+//     detailSaleModel
+//       .find(filter)
+//       .sort({ createAt: -1 })
+//       .skip(skipCount)
+//       .limit(50)
+//
+//       // .populate("stationDetailId")
+//       .select("-__v"),
+
+//     detailSaleModel.countDocuments(filter),
+//   ]);
+
+//   console.log(data);
+
+//   return { data, count };
+// };
+
 export const detailSaleByDateAndPagi = async (
+  query: FilterQuery<detailSaleDocument>,
   d1: Date,
   d2: Date,
-  pageNo : number
-): Promise<{ count: number, data: detailSaleDocument[] }> => {
-  const reqPage = pageNo == 1 ? 0 : pageNo - 1;
-  const skipCount = limitNo * reqPage;
-  // let result = await detailSaleModel
-  //   .find({
-  //     createAt: {
-  //       $gt: d1,
-  //       $lt: d2,
-  //     },
-  //   })
-  //   .sort({ createAt: -1 })
-  //   .skip(skipCount)
-  //   .limit(limitNo)
-  //   .lean()
-  //   .populate("stationDetailId")
-  //   .select("-__v");
+  pageNo: number
+): Promise<{ count: number; data: detailSaleDocument[] }> => {
+  try {
+    const reqPage = pageNo == 1 ? 0 : pageNo - 1;
+    const skipCount = limitNo * reqPage;
+    // console.log(reqPage , skipCount)
+    const filter: FilterQuery<detailSaleDocument> = {
+      ...query,
+      createAt: {
+        $gt: d1,
+        $lt: d2,
+      },
+    };
 
-  const [data, count] = await Promise.all([
-    detailSaleModel
-      .find({
-        createAt: {
-          $gt: d1,
-          $lt: d2,
-        },
-      })
+    const dataQuery = detailSaleModel
+      .find(filter)
       .sort({ createAt: -1 })
       .skip(skipCount)
       .limit(limitNo)
-      .lean()
       .populate("stationDetailId")
-      .select("-__v"),
+      .select("-__v");
 
-    detailSaleModel
-      .countDocuments({
-        createAt: {
-          $gt: d1,
-          $lt: d2,
-        },
-      })
-  ]);
+    const countQuery = detailSaleModel.countDocuments(filter);
 
-  return {data , count};
+    const [data, count] = await Promise.all([dataQuery, countQuery]);
+
+    return { data, count };
+  } catch (error) {
+    console.error("Error in detailSaleByDateAndPagi:", error);
+    throw error;
+  }
 };
