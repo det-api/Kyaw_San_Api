@@ -18,11 +18,11 @@ export const getFuelIn = async (query: FilterQuery<fuelInDocument>) => {
 export const fuelInPaginate = async (
   pageNo: number,
   query: FilterQuery<fuelInDocument>
-) => {
+):Promise<{ count: number; data: fuelInDocument[] }> => {
   const limitNo = config.get<number>("page_limit");
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
-  return await fuelInModel
+  const data = await fuelInModel
     .find(query)
     .sort({ createAt: -1 })
     .skip(skipCount)
@@ -30,6 +30,9 @@ export const fuelInPaginate = async (
     .lean()
     .populate("stationId")
     .select("-__v");
+
+  const count = await fuelInModel.countDocuments(query);
+  return { count, data };
 };
 
 export const addFuelIn = async (body: any) => {
@@ -44,7 +47,7 @@ export const addFuelIn = async (body: any) => {
 
     const updatedBody = {
       ...body,
-      stationId : body.user[0].stationId,
+      stationId: body.user[0].stationId,
       fuel_in_code: no + 1,
       tank_balance: tankCondition[0].balance,
     };
@@ -88,11 +91,10 @@ export const fuelInCount = async () => {
 };
 
 export const fuelInByDate = async (
-  query :  FilterQuery<fuelInDocument>,
+  query: FilterQuery<fuelInDocument>,
   d1: Date,
   d2: Date
 ): Promise<fuelInDocument[]> => {
-
   const filter: FilterQuery<fuelInDocument> = {
     ...query,
     createAt: {

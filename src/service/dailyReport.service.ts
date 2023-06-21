@@ -85,19 +85,21 @@ export const getDailyReportByDate = async (
 export const dailyReportPaginate = async (
   pageNo: number,
   query: FilterQuery<dailyReportDocument>
-) => {
+) : Promise<{count : number , data : dailyReportDocument[]}>  => {
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
 
-  return await dailyReportModel
+  const data = await dailyReportModel
     .find(query)
     .sort({ date: -1 })
     .skip(skipCount)
     .limit(limitNo)
     .populate("stationId")
     .select("-__v");
+
+  const count = await dailyReportModel.countDocuments(query)
+
+  return {count , data}
+
 };
 
-export const dailyReportCount = async () => {
-  return await dailyReportModel.count();
-};

@@ -28,14 +28,14 @@ fuelInRoute.get(
 fuelInRoute.post(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),    //In that one role is manager
   hasAnyPermit(["add"]),
   addFuelInHandler
 );
 fuelInRoute.patch(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["edit"]),
   validateAll(allSchemaId),
   updateFuelInHandler
@@ -43,7 +43,7 @@ fuelInRoute.patch(
 fuelInRoute.delete(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["delete"]),
   validateAll(allSchemaId),
   deleteFuelInHandler

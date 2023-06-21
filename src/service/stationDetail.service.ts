@@ -17,16 +17,20 @@ export const getStationDetail = async (
 export const stationDetailPaginate = async (
   pageNo: number,
   query: FilterQuery<stationDetailDocument>
-) => {
+): Promise<{ count: number; data: stationDetailDocument[] }> => {
   const limitNo = config.get<number>("page_limit");
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
-  return await stationDetailModel
+  const data = await stationDetailModel
     .find(query)
     .skip(skipCount)
     .limit(limitNo)
     .lean()
     .select("-__v");
+
+  const count = await stationDetailModel.countDocuments(query);
+
+  return { data, count };
 };
 
 export const addStationDetail = async (body: stationDetailDocument) => {
@@ -61,8 +65,4 @@ export const deleteStationDetail = async (
   } catch (e) {
     throw new Error(e);
   }
-};
-
-export const stationDetailCount = async () => {
-  return await stationDetailModel.count();
 };

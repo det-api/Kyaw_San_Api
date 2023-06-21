@@ -9,6 +9,7 @@ import {
 import { hasAnyPermit } from "../middleware/permitValidator";
 import { roleValidator } from "../middleware/roleValidator";
 import { validateAll, validateToken } from "../middleware/validator";
+import { fuelBalanceSchema } from "../schema/scheama";
 const fuelBalanceRoute = require("express").Router();
 
 fuelBalanceRoute.get(
@@ -33,7 +34,8 @@ fuelBalanceRoute.get(
 fuelBalanceRoute.post(
   "/",
   validateToken,
-  roleValidator("admin"),
+  validateAll(fuelBalanceSchema),
+  roleValidator(["admin"]),
   hasAnyPermit(["add"]),
   addFuelBalanceHandler
 );
@@ -41,7 +43,7 @@ fuelBalanceRoute.post(
 fuelBalanceRoute.patch(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["edit"]),
   updateFuelBalanceHandler
 );
@@ -49,7 +51,7 @@ fuelBalanceRoute.patch(
 fuelBalanceRoute.delete(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["delete"]),
   deleteFuelBalanceHandler
 );

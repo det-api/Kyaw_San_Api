@@ -22,7 +22,7 @@ stationDetailRoute.post(
   "/",
   validateToken,
   validateAll(stationDetailSchema),
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["add"]),
   addStationDetailHandler
 );
@@ -31,7 +31,7 @@ stationDetailRoute.patch(
   "/",
   validateToken,
   validateAll(allSchemaId),
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["edit"]),
   updateStationDetailHandler
 );
@@ -40,7 +40,7 @@ stationDetailRoute.delete(
   "/",
   validateToken,
   validateAll(allSchemaId),
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["delete"]),
   deleteStationDetailHandler
 );

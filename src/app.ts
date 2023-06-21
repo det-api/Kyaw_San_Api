@@ -33,6 +33,12 @@ const dbUrl = config.get<string>("dbUrl");
 
 mongoose.connect(dbUrl);
 
+
+mongoose.connection.on('error', (error) => {
+  // Handle mongodb connection error
+  console.error('Error connecting to the database:', error);
+});
+
 // request routes
 
 app.get("/api", (req: Request, res: Response, next: NextFunction) => {

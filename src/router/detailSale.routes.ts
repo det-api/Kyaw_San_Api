@@ -10,7 +10,11 @@ import {
 import { hasAnyPermit } from "../middleware/permitValidator";
 import { roleValidator } from "../middleware/roleValidator";
 import { validateAll, validateToken } from "../middleware/validator";
-import { allSchemaId, detailSaleSchema } from "../schema/scheama";
+import {
+  allSchemaId,
+  detailSaleSchema,
+  detailSaleUpdateSchema,
+} from "../schema/scheama";
 
 const detailSaleRoute = require("express").Router();
 
@@ -35,13 +39,17 @@ detailSaleRoute.get(
   getDetailSaleDatePagiHandler
 );
 //that for only device
-detailSaleRoute.post("/", addDetailSaleHandler);
-detailSaleRoute.patch("/", updateDetailSaleHandler);
+detailSaleRoute.post("/", validateAll(detailSaleSchema), addDetailSaleHandler);
+detailSaleRoute.patch(
+  "/",
+  validateAll(detailSaleUpdateSchema),
+  updateDetailSaleHandler
+);
 
 detailSaleRoute.delete(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["delete"]),
   validateAll(allSchemaId),
   deleteDetailSaleHandler

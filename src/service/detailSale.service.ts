@@ -74,10 +74,10 @@ export const getDetailSaleByFuelType = async (
 export const detailSalePaginate = async (
   pageNo: number,
   query: FilterQuery<detailSaleDocument>
-) => {
+): Promise<{ count: number; data: detailSaleDocument[] }>  => {
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
-  return await detailSaleModel
+  const data = await detailSaleModel
     .find(query)
     .sort({ createAt: -1 })
     .skip(skipCount)
@@ -85,11 +85,11 @@ export const detailSalePaginate = async (
 
     .populate("stationDetailId")
     .select("-__v");
+  const count = await detailSaleModel.countDocuments(query)
+
+  return {data , count}
 };
 
-export const detailSaleCount = async () => {
-  return await detailSaleModel.count();
-};
 // that is testing
 
 // export const detailSaleByDate = async (sDate, eDate) => {

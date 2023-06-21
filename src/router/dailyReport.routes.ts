@@ -22,7 +22,7 @@ dailyReportRoute.get(
 dailyReportRoute.post(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["add"]),
   validateAll(dailyReportSchema),
   addDailyReportHandler
@@ -30,7 +30,7 @@ dailyReportRoute.post(
 dailyReportRoute.patch(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["edit"]),
   validateAll(allSchemaId),
   updateDailyReportHandler
@@ -38,7 +38,7 @@ dailyReportRoute.patch(
 dailyReportRoute.delete(
   "/",
   validateToken,
-  roleValidator("admin"),
+  roleValidator(["admin"]),
   hasAnyPermit(["delete"]),
   validateAll(allSchemaId),
   deleteDailyReportHandler

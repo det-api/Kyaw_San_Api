@@ -6,7 +6,6 @@ import {
   updateDetailSale,
   deleteDetailSale,
   detailSalePaginate,
-  detailSaleCount,
   detailSaleByDate,
   detailSaleByDateAndPagi,
   // detailSaleByDate,
@@ -25,10 +24,9 @@ export const getDetailSaleHandler = async (
 ) => {
   try {
     let pageNo = Number(req.params.page);
-    let result = await detailSalePaginate(pageNo, req.query);
-    let totalDetailSale = await detailSaleCount();
+    let { data, count } = await detailSalePaginate(pageNo, req.query);
     // console.log(typeof result[0].createAt);
-    fMsg(res, "DetailSale are here", result, totalDetailSale);
+    fMsg(res, "DetailSale are here", data, count);
   } catch (e) {
     next(new Error(e));
   }
@@ -150,7 +148,6 @@ export const getDetailSaleByDateHandler = async (
 
     let query = req.query;
 
-
     if (!sDate) {
       throw new Error("you need date");
     }
@@ -160,7 +157,7 @@ export const getDetailSaleByDateHandler = async (
     //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
-    let result = await detailSaleByDate(query,startDate, endDate);
+    let result = await detailSaleByDate(query, startDate, endDate);
     fMsg(res, "detail sale between two date", result);
   } catch (e) {
     next(new Error(e));

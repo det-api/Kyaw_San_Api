@@ -7,7 +7,6 @@ import {
   deleteDailyReport,
   getDailyReportByDate,
   dailyReportPaginate,
-  dailyReportCount,
 } from "../service/dailyReport.service";
 import {
   getDetailSale,
@@ -22,32 +21,10 @@ export const getDailyReportHandler = async (
   try {
     let pageNo = Number(req.params.page);
 
-    let result = await dailyReportPaginate(pageNo, req.query);
-    // console.log(result);
-    // await Promise.all(
-    //   result.map(async (ea) => {
-    //     ea["ninety-two"] = await getDetailSaleByFuelType(
-    //       ea["dateOfDay"],
-    //       // ea["stationId"],
-    //       "001-Octane Ron(92)"
-    //     );
-    //     ea["ninety-five"] = await getDetailSaleByFuelType(
-    //       ea["dateOfDay"],
-    //       "002-Octane Ron(95)"
-    //     );
-    //     ea["HSD"] = await getDetailSaleByFuelType(
-    //       ea["dateOfDay"],
-    //       "004-Diesel"
-    //     );
-    //     ea["PHSD"] = await getDetailSaleByFuelType(
-    //       ea["dateOfDay"],
-    //       "005-Premium Diesel"
-    //     );
-    //   })
-    // );
-    
-    const resultWithDetails = await Promise.all(
-      result.map(async (ea) => {
+    let { data, count } = await dailyReportPaginate(pageNo, req.query);
+
+    const result = await Promise.all(
+      data.map(async (ea) => {
         ea["ninety-two"] = await getDetailSaleByFuelType(
           ea["dateOfDay"],
           "001-Octane Ron(92)"
@@ -67,8 +44,7 @@ export const getDailyReportHandler = async (
         return {
           _id: ea["_id"],
           stationId: ea["stationId"],
-          allTotalLizerLiter: ea["allTotalLizerLiter"],
-          allTotalLizerPriallTotalLizerLiterce: ea["allTotalLizerPrice"],
+          dateOfDay: ea["dateOfDay"],
           date: ea["date"],
           prices: ea["prices"],
           "ninety-two": ea["ninety-two"],
@@ -79,10 +55,7 @@ export const getDailyReportHandler = async (
       })
     );
 
-
-    let totalCount = await dailyReportCount();
-
-    fMsg(res, "DailyReport are here", resultWithDetails, totalCount);
+    fMsg(res, "DailyReport are here", result, count);
   } catch (e) {
     next(new Error(e));
   }
@@ -91,7 +64,7 @@ export const getDailyReportHandler = async (
 export const addDailyReportHandler = async (
   req: Request,
   res: Response,
-  next: NextFunction 
+  next: NextFunction
 ) => {
   try {
     let result = await addDailyReport(req.body);
@@ -177,8 +150,7 @@ export const getDailyReportByDateHandler = async (
         return {
           _id: ea["_id"],
           stationId: ea["stationId"],
-          allTotalLizerLiter: ea["allTotalLizerLiter"],
-          allTotalLizerPriallTotalLizerLiterce: ea["allTotalLizerPrice"],
+          dateOfDay: ea["dateOfDay"],
           date: ea["date"],
           prices: ea["prices"],
           "ninety-two": ea["ninety-two"],

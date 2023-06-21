@@ -36,15 +36,22 @@ export const getFuelBalanceHandler = async (
   try {
     let pageNo = Number(req.params.page);
     let sDate = req.query.sDate?.toString();
+
+    delete req.query.sDate;
+    delete req.query.eDate;
+
+    let query = req.query;
+
     if (!sDate) {
       throw new Error("you need date");
     }
 
-    let final = await fuelBalancePaginate(pageNo, { createAt: sDate });
+    let { count, data } = await fuelBalancePaginate(pageNo, {
+      ...query,
+      createAt: sDate,
+    });
 
-    let totalCount = await fuelBalanceCount();
-
-    fMsg(res, "fuelBalance find", final, totalCount);
+    fMsg(res, "fuelBalance find", data, count);
   } catch (e) {
     next(new Error(e));
   }

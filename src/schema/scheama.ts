@@ -1,4 +1,4 @@
-import { number, object, string } from "zod";
+import { array, number, object, string } from "zod";
 
 export const allSchemaId = object({
   query: object({
@@ -104,29 +104,57 @@ export const dailyReportSchema = object({
 
 export const detailSaleSchema = object({
   body: object({
+    stationDetailId: string({
+      // required_error: "you need stationId",
+      required_error: " Nugh",
+    }).regex(/^[0-9a-fA-F]{24}$/, "invlid id"),
     vocono: string({
-      required_error: "vocono is required",
+      // required_error: "vocono is required",
+      required_error: " dd ",
     }),
-    nozzleNo: string({
-      required_error: "nozzleNo is required",
+    nozzleNo: number({
+      // required_error: "nozzleNo is required",
+      required_error: "Not enough",
     }),
     fuelType: string({
-      required_error: "fuelType is required",
+      // required_error: "fuelType is required",
+      required_error: "Not enough",
     }),
     salePrice: number({
-      required_error: "You need sale price",
+      // required_error: "You need sale price",
+      required_error: "Not enough",
     }),
     saleLiter: number({
-      required_error: "You need sale Liter",
+      // required_error: "You need sale Liter",
+      required_error: "Not enough",
     }),
     totalPrice: number({
-      required_error: "You need total price",
+      // required_error: "You need total price",
+      required_error: "Not enough",
     }),
     totalizer_liter: number({
-      required_error: "You need totalizer liter",
+      // required_error: "You need totalizer liter",
+      required_error: "Not enough",
     }),
     totalizer_amount: number({
-      required_error: "You need totalizer amount",
+      // required_error: "You need totalizer amount",
+      required_error: "Not enough",
+    }),
+  }),
+});
+
+export const detailSaleUpdateSchema = object({
+  query: object({
+    stationDetailId: string({
+      required_error: " Not enough",
+    }).regex(/^[0-9a-fA-F]{24}$/, "invlid id"),
+    vocono: string({
+      required_error: " Not enough",
+    }),
+  }),
+  body: object({
+    vehicleType: string({
+      required_error: "Not enough",
     }),
   }),
 });
@@ -165,24 +193,26 @@ export const fuelBalanceSchema = object({
       required_error: "no data with that id",
     }).regex(/^[0-9a-fA-F]{24}$/, "invlid id"),
 
-    fuel_type: string({
+    fuelType: string({
       required_error: "you need add fuel_type",
     }),
 
     capacity: string({
-      required_error: "you need add fuel_type",
+      required_error: "you need add capacity",
     }),
 
     opening: string({
-      required_error: "you need add fuel_type",
+      required_error: "you need add opening",
     }),
 
     tankNo: string({
-      required_error: "you need add fuel_type",
+      required_error: "you need add tankNo",
     }),
 
-    nozzles: string({
-      required_error: "you need add fuel_type",
-    }),
+    nozzles: array(
+      string({
+        required_error: "you need add nozzles",
+      })
+    ),
   }),
 });

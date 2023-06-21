@@ -17,9 +17,8 @@ export const getFuelInHandler = async (
 ) => {
   try {
     let pageNo = Number(req.params.page);
-    let result = await fuelInPaginate(pageNo, req.query);
-    let totalCount = await fuelInCount();
-    fMsg(res, "FuelIn are here", result, totalCount);
+    let { data, count } = await fuelInPaginate(pageNo, req.query);
+    fMsg(res, "FuelIn are here", data, count);
   } catch (e) {
     next(new Error(e));
   }
@@ -69,28 +68,28 @@ export const getFuelInByDateHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  try{
+  try {
     let sDate: any = req.query.sDate;
-  let eDate: any = req.query.eDate;
+    let eDate: any = req.query.eDate;
 
-  delete req.query.sDate;
-  delete req.query.eDate;
+    delete req.query.sDate;
+    delete req.query.eDate;
 
-  let query = req.query;
+    let query = req.query;
 
-  if (!sDate) {
-    throw new Error("you need date");
-  }
-  if (!eDate) {
-    eDate = new Date();
-  }
-  //if date error ? you should use split with T or be sure detail Id
-  const startDate : Date = new Date(sDate);
-  const endDate: Date = new Date(eDate);
+    if (!sDate) {
+      throw new Error("you need date");
+    }
+    if (!eDate) {
+      eDate = new Date();
+    }
+    //if date error ? you should use split with T or be sure detail Id
+    const startDate: Date = new Date(sDate);
+    const endDate: Date = new Date(eDate);
 
-  let result = await fuelInByDate(query ,startDate, endDate);
-  fMsg(res, "fuel balance between two date", result);
-  }catch(e){
+    let result = await fuelInByDate(query, startDate, endDate);
+    fMsg(res, "fuel balance between two date", result);
+  } catch (e) {
     next(new Error(e));
   }
 };
