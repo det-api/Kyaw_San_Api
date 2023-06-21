@@ -21,18 +21,18 @@ stationDetailRoute.get(
 stationDetailRoute.post(
   "/",
   validateToken,
-  validateAll(stationDetailSchema),
   roleValidator(["admin"]),
   hasAnyPermit(["add"]),
+  validateAll(stationDetailSchema),
   addStationDetailHandler
 );
 
 stationDetailRoute.patch(
   "/",
   validateToken,
-  validateAll(allSchemaId),
   roleValidator(["admin"]),
   hasAnyPermit(["edit"]),
+  validateAll(allSchemaId),
   updateStationDetailHandler
 );
 

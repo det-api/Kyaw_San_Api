@@ -60,7 +60,6 @@ app.use("/api/fuel-balance", fuelBalanceRoute);
 
 //Error Routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.dir(err.status);
   err.status = err.status || 409;
   res.status(err.status).json({
     con: false,

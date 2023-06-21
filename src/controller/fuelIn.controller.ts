@@ -6,7 +6,6 @@ import {
   updateFuelIn,
   deleteFuelIn,
   fuelInPaginate,
-  fuelInCount,
   fuelInByDate,
 } from "../service/fuelIn.service";
 

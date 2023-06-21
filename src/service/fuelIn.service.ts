@@ -18,7 +18,7 @@ export const getFuelIn = async (query: FilterQuery<fuelInDocument>) => {
 export const fuelInPaginate = async (
   pageNo: number,
   query: FilterQuery<fuelInDocument>
-):Promise<{ count: number; data: fuelInDocument[] }> => {
+): Promise<{ count: number; data: fuelInDocument[] }> => {
   const limitNo = config.get<number>("page_limit");
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
@@ -32,6 +32,7 @@ export const fuelInPaginate = async (
     .select("-__v");
 
   const count = await fuelInModel.countDocuments(query);
+
   return { count, data };
 };
 
@@ -86,9 +87,6 @@ export const deleteFuelIn = async (query: FilterQuery<fuelInDocument>) => {
   }
 };
 
-export const fuelInCount = async () => {
-  return await fuelInModel.count();
-};
 
 export const fuelInByDate = async (
   query: FilterQuery<fuelInDocument>,
