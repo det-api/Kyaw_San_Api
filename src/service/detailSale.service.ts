@@ -82,7 +82,6 @@ export const detailSalePaginate = async (
     .sort({ createAt: -1 })
     .skip(skipCount)
     .limit(limitNo)
-
     .populate("stationDetailId")
     .select("-__v");
   const count = await detailSaleModel.countDocuments(query)
@@ -90,15 +89,6 @@ export const detailSalePaginate = async (
   return {data , count}
 };
 
-// that is testing
-
-// export const detailSaleByDate = async (sDate, eDate) => {
-//   console.log(new Date(sDate), new Date(eDate));
-//   let result = await detailSaleModel.find({
-//     createAt: { $gt: new Date(sDate), $lt: new Date(eDate) },
-//   });
-//   console.log(result);
-// };
 
 export const detailSaleByDate = async (
   query: FilterQuery<detailSaleDocument>,
@@ -121,43 +111,6 @@ export const detailSaleByDate = async (
 
   return result;
 };
-
-// export const detailSaleByDateAndPagi = async (
-//   query: FilterQuery<detailSaleDocument>,
-//   d1: Date,
-//   d2: Date,
-//   pageNo: number
-// ): Promise<{ count: number; data: detailSaleDocument[] }> => {
-// const limitNo = config.get<number>("page_limit");
-
-//   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
-//   const skipCount = 50 * reqPage;
-
-//   const filter: FilterQuery<detailSaleDocument> = {
-//     ...query,
-//     createAt: {
-//       $gt: d1,
-//       $lt: d2,
-//     },
-//   };
-
-//   const [data, count] = await Promise.all([
-//     detailSaleModel
-//       .find(filter)
-//       .sort({ createAt: -1 })
-//       .skip(skipCount)
-//       .limit(50)
-//
-//       // .populate("stationDetailId")
-//       .select("-__v"),
-
-//     detailSaleModel.countDocuments(filter),
-//   ]);
-
-//   console.log(data);
-
-//   return { data, count };
-// };
 
 export const detailSaleByDateAndPagi = async (
   query: FilterQuery<detailSaleDocument>,

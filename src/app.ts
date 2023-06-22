@@ -65,14 +65,13 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     con: false,
     msg: err.message,
   });
-  // fMsg2(res , err.status ,err.message)
 });
 
 //migrate
-migrate();
+// migrate();
 
 // // back up
-backup(dbUrl);
+// backup(dbUrl);
 
 //daily
 daily();

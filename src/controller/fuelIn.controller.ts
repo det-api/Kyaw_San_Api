@@ -71,6 +71,8 @@ export const getFuelInByDateHandler = async (
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
 
+    let pageNo: number = Number(req.params.page);
+
     delete req.query.sDate;
     delete req.query.eDate;
 
@@ -86,8 +88,8 @@ export const getFuelInByDateHandler = async (
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
-    let result = await fuelInByDate(query, startDate, endDate);
-    fMsg(res, "fuel balance between two date", result);
+    let { data, count } = await fuelInByDate(query, startDate, endDate, pageNo);
+    fMsg(res, "fuel balance between two date", data, count);
   } catch (e) {
     next(new Error(e));
   }

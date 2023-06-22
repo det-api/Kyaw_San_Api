@@ -13,15 +13,15 @@ const fuelInRoute = require("express").Router();
 
 fuelInRoute.get(
   "/pagi/:page",
-  validateToken,
-  hasAnyPermit(["view"]),
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getFuelInHandler
 );
 
 fuelInRoute.get(
-  "/by-date",
-  validateToken,
-  hasAnyPermit(["view"]),
+  "/pagi/by-date/:page",
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getFuelInByDateHandler
 );
 
