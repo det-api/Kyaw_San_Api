@@ -20,7 +20,7 @@ const fuelInSchema = new Schema({
   stationId: {
     type: Schema.Types.ObjectId,
     ref: "stationDetail",
-    default: "6464e9f1c45b82216ab1db6b",
+    require : true
   },
   driver: { type: String, required: true },
   bowser: { type: String, required: true },

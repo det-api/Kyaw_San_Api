@@ -20,15 +20,15 @@ const detailSaleRoute = require("express").Router();
 
 detailSaleRoute.get(
   "/pagi/:page",
-  validateToken,
-  hasAnyPermit(["view"]),
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getDetailSaleHandler
 );
 
 detailSaleRoute.get(
   "/by-date",
-  validateToken,
-  hasAnyPermit(["view"]),
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getDetailSaleByDateHandler
 );
 

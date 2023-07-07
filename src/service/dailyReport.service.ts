@@ -21,7 +21,7 @@ export const getDailyReport = async (
 
 export const addDailyReport = async (body: dailyReportDocument | {}) => {
   try {
-    console.log("create one");
+    console.log("created  dailyReport");
     return await new dailyReportModel(body).save();
   } catch (e) {
     throw new Error(e);
@@ -55,12 +55,11 @@ export const deleteDailyReport = async (
 };
 
 export const getDailyReportByDate = async (
-  query : FilterQuery<dailyReportDocument>,
+  query: FilterQuery<dailyReportDocument>,
   d1: Date,
   d2: Date,
-  pageNo : number
+  pageNo: number
 ): Promise<dailyReportDocument[]> => {
-
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
 
@@ -85,7 +84,7 @@ export const getDailyReportByDate = async (
 export const dailyReportPaginate = async (
   pageNo: number,
   query: FilterQuery<dailyReportDocument>
-) : Promise<{count : number , data : dailyReportDocument[]}>  => {
+): Promise<{ count: number; data: dailyReportDocument[] }> => {
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
 
@@ -97,9 +96,30 @@ export const dailyReportPaginate = async (
     .populate("stationId")
     .select("-__v");
 
-  const count = await dailyReportModel.countDocuments(query)
+  const count = await dailyReportModel.countDocuments(query);
 
-  return {count , data}
-
+  return { count, data };
 };
 
+export const getDailyReportByMonth = async (
+  query: FilterQuery<dailyReportDocument>,
+  year: number,
+  month: number
+): Promise<dailyReportDocument[]> => {
+  const startDate = new Date(year, month - 1, 1, 0, 0, 0); // Month is zero-based
+  const endDate = new Date(year, month, 1, 0, 0, 0); // Month is zero-based
+  console.log(startDate, endDate);
+  const filter: FilterQuery<dailyReportDocument> = {
+    ...query,
+    date: {
+      $gte: startDate,
+      $lt: endDate,
+    },
+  };
+
+  const result = await dailyReportModel
+    .find(filter)
+    .select("-__v");
+
+  return result;
+};

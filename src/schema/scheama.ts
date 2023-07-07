@@ -114,31 +114,31 @@ export const detailSaleSchema = object({
     }),
     nozzleNo: number({
       // required_error: "nozzleNo is required",
-      required_error: "Not enough",
+      required_error: "Not enough nozzle No",
     }),
     fuelType: string({
       // required_error: "fuelType is required",
-      required_error: "Not enough",
+      required_error: "Not enough fuel type",
     }),
     salePrice: number({
       // required_error: "You need sale price",
-      required_error: "Not enough",
+      required_error: "Not enough sale price",
     }),
     saleLiter: number({
       // required_error: "You need sale Liter",
-      required_error: "Not enough",
+      required_error: "Not enough sale liter",
     }),
     totalPrice: number({
       // required_error: "You need total price",
-      required_error: "Not enough",
+      required_error: "Not enough total price",
     }),
     totalizer_liter: number({
       // required_error: "You need totalizer liter",
-      required_error: "Not enough",
+      required_error: "Not enough liter",
     }),
     totalizer_amount: number({
       // required_error: "You need totalizer amount",
-      required_error: "Not enough",
+      required_error: "Not enough amount",
     }),
   }),
 });

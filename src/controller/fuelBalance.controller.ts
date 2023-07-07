@@ -7,7 +7,6 @@ import {
   updateFuelBalance,
   deleteFuelBalance,
   fuelBalancePaginate,
-  fuelBalanceCount,
   fuelBalanceByDate,
 } from "../service/fuelBalance.service";
 import { fuelBalanceDocument } from "../model/fuelBalance.model";

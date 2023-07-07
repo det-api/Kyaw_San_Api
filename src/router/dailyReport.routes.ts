@@ -4,6 +4,7 @@ import {
   updateDailyReportHandler,
   deleteDailyReportHandler,
   getDailyReportByDateHandler,
+  getDailyReportByMonthHandler,
   // getDailyReportTest,
 } from "../controller/dailyReport.controller";
 import { hasAnyPermit } from "../middleware/permitValidator";
@@ -14,8 +15,8 @@ const dailyReportRoute = require("express").Router();
 
 dailyReportRoute.get(
   "/pagi/:page",
-  validateToken,
-  hasAnyPermit(["view"]),
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getDailyReportHandler
 );
 
@@ -50,5 +51,7 @@ dailyReportRoute.get(
   hasAnyPermit(["view"]),
   getDailyReportByDateHandler
 );
+
+dailyReportRoute.get("/by-month" , getDailyReportByMonthHandler)
 
 export default dailyReportRoute;

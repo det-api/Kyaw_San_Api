@@ -21,14 +21,14 @@ fuelBalanceRoute.get(
 
 fuelBalanceRoute.get(
   "/pagi/:page",
-  validateToken,
-  hasAnyPermit(["view"]),
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getFuelBalanceHandler
 );
 fuelBalanceRoute.get(
   "/by-date",
-  validateToken,
-  hasAnyPermit(["view"]),
+  // validateToken,
+  // hasAnyPermit(["view"]),
   getFuelBalanceByDateHandler
 );
 fuelBalanceRoute.post(

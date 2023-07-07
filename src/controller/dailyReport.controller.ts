@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, query } from "express";
 import fMsg from "../utils/helper";
 import {
   getDailyReport,
@@ -7,11 +7,13 @@ import {
   deleteDailyReport,
   getDailyReportByDate,
   dailyReportPaginate,
+  getDailyReportByMonth,
 } from "../service/dailyReport.service";
 import {
   getDetailSale,
   getDetailSaleByFuelType,
 } from "../service/detailSale.service";
+import { number } from "zod";
 
 export const getDailyReportHandler = async (
   req: Request,
@@ -162,6 +164,34 @@ export const getDailyReportByDateHandler = async (
     );
 
     fMsg(res, "between two date", resultWithDetails);
+  } catch (e) {
+    next(new Error(e));
+  }
+};
+
+export const getDailyReportByMonthHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let year = req.query.year;
+    let month = req.query.month;
+
+    console.log(typeof year); 
+
+    // delete req.query.year;
+    // delete req.query.month;
+
+    // if (!year || !month) {
+    //   next(new Error("you need month or date wk"));
+    // }
+   
+    // if (typeof year != "number" || typeof month != "number")
+    //   return next(new Error("you need month or date"));
+
+    let result =await getDailyReportByMonth(req.query, 2023, 5);
+    fMsg(res , 'wk' , result)
   } catch (e) {
     next(new Error(e));
   }

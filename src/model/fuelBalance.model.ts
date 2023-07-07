@@ -20,7 +20,7 @@ const fuelBalanceSchema = new Schema({
   stationId: {
     type: Schema.Types.ObjectId,
     ref: "stationDetail",
-    default: "6449f5a9a1808c9679bbed27",
+    require: true,
   },
   fuelType: { type: String, required: true },
   capacity: { type: String, required: true },
@@ -30,8 +30,8 @@ const fuelBalanceSchema = new Schema({
   cash: { type: Number, default: 0 },
   balance: { type: Number, default: 0 },
   nozzles: { type: Array, required: true },
-  realTime: { type: Date , default: new Date()},
-  createAt: { type: String, default: new Date().toLocaleDateString(`fr-CA`)  },
+  realTime: { type: Date, default: new Date() },
+  createAt: { type: String, default: new Date().toLocaleDateString(`fr-CA`) },
 });
 
 fuelBalanceSchema.pre("save", function (next) {

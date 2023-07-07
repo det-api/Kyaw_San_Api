@@ -13,7 +13,6 @@ import dailyReportRoute from "./router/dailyReport.routes";
 import detailSaleRoute from "./router/detailSale.routes";
 import { backup } from "./backup/backup";
 import { migrate } from "./migration/migrator";
-import { daily } from "./migration/dailyReport.migrate";
 import fuelBalanceRoute from "./router/fuelBalance.routes";
 // import { fMsg2 } from "./utils/helper";
 
@@ -73,8 +72,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // // back up
 // backup(dbUrl);
 
-//daily
-daily();
 
 server.listen(port, () =>
   console.log(`server is running in  http://${host}:${port}`)
