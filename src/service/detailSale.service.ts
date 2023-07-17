@@ -18,8 +18,10 @@ export const getDetailSale = async (query: FilterQuery<detailSaleDocument>) => {
 
 export const addDetailSale = async (body: detailSaleDocument) => {
   try {
+    delete body._id;
     return await new detailSaleModel(body).save();
   } catch (e) {
+    console.log(e);
     throw new Error(e);
   }
 };
@@ -74,7 +76,7 @@ export const getDetailSaleByFuelType = async (
 export const detailSalePaginate = async (
   pageNo: number,
   query: FilterQuery<detailSaleDocument>
-): Promise<{ count: number; data: detailSaleDocument[] }>  => {
+): Promise<{ count: number; data: detailSaleDocument[] }> => {
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
   const data = await detailSaleModel
@@ -84,11 +86,10 @@ export const detailSalePaginate = async (
     .limit(limitNo)
     .populate("stationDetailId")
     .select("-__v");
-  const count = await detailSaleModel.countDocuments(query)
+  const count = await detailSaleModel.countDocuments(query);
 
-  return {data , count}
+  return { data, count };
 };
-
 
 export const detailSaleByDate = async (
   query: FilterQuery<detailSaleDocument>,

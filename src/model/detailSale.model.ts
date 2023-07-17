@@ -8,7 +8,7 @@ export interface detailSaleDocument extends mongoose.Document {
   vocono: string;
   carNo: string;
   vehicleType: string;
-  nozzleNo: number;
+  nozzleNo: string;
   fuelType: string;
   salePrice: number;
   saleLiter: number;
@@ -23,11 +23,11 @@ const detailSaleSchema = new Schema({
     require: true,
     ref: "stationDetail",
   },
-  vocono: { type: String, required: true, unique: true },  //g
-  carNo: { type: String, default: null },  //g
-  vehicleType: { type: String, default: "car" },  //g
-  nozzleNo: { type: Number, required: true },  //g
-  fuelType: { type: String, required: true },  //g
+  vocono: { type: String, required: true, unique: true }, //g
+  carNo: { type: String, default: null }, //g
+  vehicleType: { type: String, default: "car" }, //g
+  nozzleNo: { type: String, required: true }, //g
+  fuelType: { type: String, required: true }, //g
   salePrice: { type: Number, required: true },
   saleLiter: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
@@ -44,8 +44,6 @@ detailSaleSchema.pre("save", function (next) {
   if (this.fuelType == "001-Octane Ron(92)" && this.salePrice < 5000) {
     this.vehicleType = "Cycle";
   }
-
-  
 
   const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
   if (this.dailyReportDate) {

@@ -112,7 +112,7 @@ export const detailSaleSchema = object({
       // required_error: "vocono is required",
       required_error: " dd ",
     }),
-    nozzleNo: number({
+    nozzleNo: string({
       // required_error: "nozzleNo is required",
       required_error: "Not enough nozzle No",
     }),

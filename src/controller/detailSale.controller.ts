@@ -16,7 +16,7 @@ import {
   getFuelBalance,
 } from "../service/fuelBalance.service";
 import { fuelBalanceDocument } from "../model/fuelBalance.model";
-import { addDailyReport } from "../service/dailyReport.service";
+import { addDailyReport, getDailyReport } from "../service/dailyReport.service";
 
 export const getDetailSaleHandler = async (
   req: Request,
@@ -41,22 +41,36 @@ export const addDetailSaleHandler = async (
 ) => {
   try {
     //that is remove after pos updated
-    console.log(req.body)
-    // let check = await getDetailSale({ vocono: req.body.vocono });
-    // if (check.length != 0) {
-    //   fMsg(res, "Data with that Vocono is already exist");
-    //   return;
-    // }
+    let check = await getDetailSale({ vocono: req.body.vocono });
+    if (check.length != 0) {
+      fMsg(res, "Data with that Vocono is already exist");
+      return;
+    }
 
     let result = await addDetailSale(req.body);
-
+    console.log(result);
     let checkDate = await getFuelBalance({
       stationId: req.body.stationDetailId,
       createAt: req.body.dailyReportDate,
     });
-    if (checkDate.length == 0) {
 
-      await addDailyReport( {stationId: req.body.stationDetailId , dateOfDay : req.body.dailyReportDate})
+    let checkRpDate = await getDailyReport({
+      stationId: result.stationDetailId,
+      dateOfDay: result.dailyReportDate,
+    });
+
+    if (checkRpDate.length == 0) {
+      await addDailyReport({
+        stationId: result.stationDetailId,
+        dateOfDay: result.dailyReportDate,
+      });
+    }
+
+    if (checkDate.length == 0) {
+      // await addDailyReport({
+      //   stationId: req.body.stationDetailId,
+      //   dateOfDay: req.body.dailyReportDate,
+      // });
 
       let prevDate = previous(new Date(req.body.dailyReportDate));
       let prevResult = await getFuelBalance({
@@ -107,6 +121,7 @@ export const addDetailSaleHandler = async (
     // );
     fMsg(res, "New DetailSale data was added", result);
   } catch (e) {
+    console.log(e);
     next(new Error(e));
   }
 };
@@ -183,7 +198,6 @@ export const getDetailSaleDatePagiHandler = async (
     delete req.query.eDate;
 
     let query = req.query;
-
 
     if (!sDate) {
       throw new Error("you need date");
