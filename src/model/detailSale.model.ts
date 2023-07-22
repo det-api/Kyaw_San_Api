@@ -28,6 +28,16 @@ const detailSaleSchema = new Schema({
   vehicleType: { type: String, default: "car" }, //g
   nozzleNo: { type: String, required: true }, //g
   fuelType: { type: String, required: true }, //g
+  //update
+  cashType: {
+    type: String,
+    default: "Cash",
+    enum: ["Cash", "KBZ_Pay", "Credit", "FOC", "Debt", "Others"],
+  },
+  casherCode: { type: String, required: true },
+  couObjId: { type: Schema.Types.ObjectId, default: null },
+  isError: { type: Boolean, default: false },
+
   salePrice: { type: Number, required: true },
   saleLiter: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
@@ -41,15 +51,16 @@ const detailSaleSchema = new Schema({
 });
 
 detailSaleSchema.pre("save", function (next) {
-  if (this.fuelType == "001-Octane Ron(92)" && this.salePrice < 5000) {
-    this.vehicleType = "Cycle";
-  }
+  const options = { timeZone: "Asia/Yangon", hour12: false };
 
   const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
-  if (this.dailyReportDate) {
-    next();
-    return;
-  }
+
+  const currentDateTime = new Date().toLocaleTimeString("en-US", options);
+
+  let iso: Date = new Date(`${currentDate}T${currentDateTime}.000Z`);
+
+  this.createAt = iso;
+
   this.dailyReportDate = currentDate;
   next();
 });

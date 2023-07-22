@@ -32,10 +32,9 @@ const dbUrl = config.get<string>("dbUrl");
 
 mongoose.connect(dbUrl);
 
-
-mongoose.connection.on('error', (error) => {
+mongoose.connection.on("error", (error) => {
   // Handle mongodb connection error
-  console.error('Error connecting to the database:', error);
+  console.error("Error connecting to the database:", error);
 });
 
 // request routes
@@ -71,7 +70,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 // // back up
 // backup(dbUrl);
-
 
 server.listen(port, () =>
   console.log(`server is running in  http://${host}:${port}`)
