@@ -14,6 +14,8 @@ import detailSaleRoute from "./router/detailSale.routes";
 import { backup } from "./backup/backup";
 import { migrate } from "./migration/migrator";
 import fuelBalanceRoute from "./router/fuelBalance.routes";
+import coustomerRoute from "./router/coustomer.routes";
+import debtRoute from "./router/debt.routes";
 // import { fMsg2 } from "./utils/helper";
 
 const app = express();
@@ -55,6 +57,9 @@ app.use("/api/station-detail", stationDetailRoute);
 app.use("/api/daily-report", dailyReportRoute);
 app.use("/api/detail-sale", detailSaleRoute);
 app.use("/api/fuel-balance", fuelBalanceRoute);
+
+app.use("/api/debt", debtRoute);
+app.use("/api/customer", coustomerRoute);
 
 //Error Routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
