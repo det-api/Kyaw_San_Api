@@ -53,7 +53,7 @@ export const deleteFuelBalance = async (
   }
 };
 
-export const calcFuelBalance = async (query, body, payload: number) => {
+export const calcFuelBalance = async (query, body, payload: string) => {
   try {
     let result = await fuelBalanceModel.find(query);
     if (result.length == 0) {

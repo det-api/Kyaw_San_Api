@@ -41,35 +41,66 @@ export const addDebtHandler = async (
     const cuurentDateForVocono = moment().tz("Asia/Yangon").format("DDMMYYYY");
     const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
 
-    if (!req.body.couObjId && !req.body.deposit)
-      throw new Error("you need customer id or deposit");
+    if (!req.body.couObjId) throw new Error("you need customer id");
 
     let coustomerConditon = await getCoustomerById(req.body.couObjId);
 
     if (!coustomerConditon)
       throw new Error("There is no coustomer with that name");
 
-    let count = await countDebt({ dateOfDay: currentDate });
-    req.body.vocono = `paid/${cuurentDateForVocono}/${count}`;
-    req.body.paided = true;
+    if (req.body.deposit) {
+      let count = await countDebt({ dateOfDay: currentDate });
+      req.body.vocono = `paid/${cuurentDateForVocono}/${count}`;
+      req.body.paided = true;
 
-    let result = await addDebt(req.body);
-    // // console.log(result);
+      let result = await addDebt(req.body);
+      // // console.log(result);
 
-    console.log(coustomerConditon);
+      console.log(coustomerConditon);
 
-    let newUpdateDebt = await getDebt({
-      couObjId: coustomerConditon._id,
-      paided: false,
-    });
+      let newUpdateDebt = await getDebt({
+        couObjId: coustomerConditon._id,
+        paided: false,
+      });
 
-    paidedHandler(newUpdateDebt, result.deposit);
+      paidedHandler(newUpdateDebt, result.deposit);
 
-    coustomerConditon.cou_debt = coustomerConditon.cou_debt + result.deposit;
+      // console.log(newUpdateDebt);
 
-    await updateCoustomer(result.couObjId, coustomerConditon);
+      // console.log(data);
 
-    fMsg(res, "New Debt data was added", result);
+      coustomerConditon.cou_debt = coustomerConditon.cou_debt + result.deposit;
+
+      await updateCoustomer(result.couObjId, coustomerConditon);
+
+      fMsg(res, "New Debt data was added", result);
+    }
+
+    if (req.body.credit) {
+      if (!req.body.vocono) throw new Error("You need to add vocono ");
+
+      let approvVocono = await getDebt({ vocono: req.body.vocono });
+
+      if (!approvVocono) throw new Error("There is no vocono with that number");
+
+      let debtBody = {
+        stationDetailId: approvVocono[0].stationDetailId,
+        vocono: req.body.vocono,
+        couObjId: approvVocono[0].couObjId,
+        deposit: 0,
+        credit: approvVocono[0].credit,
+        liter: approvVocono[0].liter,
+      };
+
+      coustomerConditon.cou_debt =
+        coustomerConditon.cou_debt + approvVocono[0].credit;
+
+      let addResutl = await addDebt(debtBody);
+
+      await updateCoustomer(req.body.couObjId, coustomerConditon);
+
+      fMsg(res, "New Debt data was added", addResutl);
+    }
   } catch (e) {
     next(new Error(e));
   }

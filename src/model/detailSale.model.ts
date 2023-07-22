@@ -1,12 +1,19 @@
 import mongoose, { Schema } from "mongoose";
 import { getDailyReportByDate } from "../service/dailyReport.service";
 import moment from "moment-timezone";
+import { coustomerDocument } from "./coustomer.model";
 
 export interface detailSaleDocument extends mongoose.Document {
   stationDetailId: string;
   dailyReportDate: string;
   vocono: string;
   carNo: string;
+
+  cashType: string;
+  casherCode: string;
+  couObjId: coustomerDocument["_id"];
+  isError: boolean;
+
   vehicleType: string;
   nozzleNo: string;
   fuelType: string;

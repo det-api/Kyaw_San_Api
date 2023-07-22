@@ -17,6 +17,11 @@ import {
 } from "../service/fuelBalance.service";
 import { fuelBalanceDocument } from "../model/fuelBalance.model";
 import { addDailyReport, getDailyReport } from "../service/dailyReport.service";
+import {
+  getCoustomerById,
+  updateCoustomer,
+} from "../service/coustomer.service";
+import { addDebt } from "../service/debt.service";
 
 export const getDetailSaleHandler = async (
   req: Request,
@@ -42,13 +47,42 @@ export const addDetailSaleHandler = async (
   try {
     //that is remove after pos updated
     let check = await getDetailSale({ vocono: req.body.vocono });
+
     if (check.length != 0) {
       fMsg(res, "Data with that Vocono is already exist");
       return;
     }
 
     let result = await addDetailSale(req.body);
-    console.log(result);
+    // console.log(result);
+
+    if (result.cashType == "Debt") {
+      // let checkVocono = await getDebt({ vocono: result.vocono });
+      // if (checkVocono.length > 0)
+      //   throw new Error("this vocono is alreadly exist");
+
+      let coustomerConditon = await getCoustomerById(result.couObjId);
+
+      if (!coustomerConditon)
+        throw new Error("There is no coustomer with that name");
+
+      let debtBody = {
+        stationDetailId: result.stationDetailId,
+        vocono: result.vocono,
+        couObjId: result.couObjId,
+        deposit: 0,
+        credit: result.totalPrice,
+        liter: result.saleLiter,
+      };
+
+      coustomerConditon.cou_debt =
+        coustomerConditon.cou_debt + result.totalPrice;
+
+      await addDebt(debtBody);
+
+      await updateCoustomer(result.couObjId, coustomerConditon);
+    }
+
     let checkDate = await getFuelBalance({
       stationId: req.body.stationDetailId,
       createAt: req.body.dailyReportDate,
@@ -67,10 +101,10 @@ export const addDetailSaleHandler = async (
     }
 
     if (checkDate.length == 0) {
-      // await addDailyReport({
-      //   stationId: req.body.stationDetailId,
-      //   dateOfDay: req.body.dailyReportDate,
-      // });
+      await addDailyReport({
+        stationId: req.body.stationDetailId,
+        dateOfDay: req.body.dailyReportDate,
+      });
 
       let prevDate = previous(new Date(req.body.dailyReportDate));
       let prevResult = await getFuelBalance({
@@ -110,15 +144,15 @@ export const addDetailSaleHandler = async (
       );
     }
 
-    // await calcFuelBalance(
-    //   {
-    //     stationId: result.stationDetailId,
-    //     fuelType: result.fuelType,
-    //     createAt: result.dailyReportDate,
-    //   },
-    //   { liter: result.saleLiter },
-    //   result.nozzleNo
-    // );
+    await calcFuelBalance(
+      {
+        stationId: result.stationDetailId,
+        fuelType: result.fuelType,
+        createAt: result.dailyReportDate,
+      },
+      { liter: result.saleLiter },
+      result.nozzleNo
+    );
     fMsg(res, "New DetailSale data was added", result);
   } catch (e) {
     console.log(e);
