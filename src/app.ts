@@ -16,6 +16,7 @@ import { migrate } from "./migration/migrator";
 import fuelBalanceRoute from "./router/fuelBalance.routes";
 import coustomerRoute from "./router/coustomer.routes";
 import debtRoute from "./router/debt.routes";
+import checkStationRoute from "./router/checkStation.routes";
 // import { fMsg2 } from "./utils/helper";
 
 const app = express();
@@ -60,6 +61,7 @@ app.use("/api/fuel-balance", fuelBalanceRoute);
 
 app.use("/api/debt", debtRoute);
 app.use("/api/customer", coustomerRoute);
+app.use('/api/check-station' , checkStationRoute)
 
 //Error Routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

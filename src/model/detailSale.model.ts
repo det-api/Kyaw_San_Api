@@ -66,9 +66,11 @@ detailSaleSchema.pre("save", function (next) {
 
   let iso: Date = new Date(`${currentDate}T${currentDateTime}.000Z`);
 
-  this.createAt = iso;
+  if (!this.dailyReportDate || !this.createAt) {
+    this.dailyReportDate = currentDate;
+    this.createAt = iso;
+  }
 
-  this.dailyReportDate = currentDate;
   next();
 });
 const detailSaleModel = mongoose.model<detailSaleDocument>(
