@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express";
-import { checkToken } from "../utils/helper";
-import { getUser } from "../service/user.service";
+import { checkToken, compass } from "../utils/helper";
+import { getCredentialUser, getUser } from "../service/user.service";
 
 export const validateAll =
   (schema: any) => async (req: Request, res: Response, next: NextFunction) => {
@@ -15,6 +15,7 @@ export const validateAll =
       return next(new Error(e.errors[0].message));
     }
   };
+
 export const validateToken = async (
   req: Request,
   res: Response,
@@ -36,5 +37,21 @@ export const validateToken = async (
     next();
   } catch (e) {
     next(new Error(e));
+  }
+};
+
+export const validateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try{
+    let [email, password] = await getCredentialUser({ email: req.body.email });
+    if (!email || !compass(req.body.password, password)) {
+      throw new Error("Creditial Error");
+    }
+    next();
+  }catch(e){
+    next (new Error(e))
   }
 };

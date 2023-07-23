@@ -6,7 +6,7 @@ import {
   updateDebtHandler,
 } from "../controller/debt.controller";
 import { hasAnyPermit } from "../middleware/permitValidator";
-import { validateToken } from "../middleware/validator";
+import { validateToken, validateUser } from "../middleware/validator";
 
 const debtRoute = require("express").Router();
 
@@ -22,6 +22,12 @@ debtRoute.get(
 debtRoute.post(
   "/",
   // validateToken, hasAnyPermit(["add"]),
+  addDebtHandler
+);
+
+debtRoute.post(
+  "/local-create",
+  validateUser,
   addDebtHandler
 );
 

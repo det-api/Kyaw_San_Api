@@ -5,7 +5,7 @@ import {
   searchCoustomerHandler,
 } from "../controller/coustomer.controller";
 import { hasAnyPermit } from "../middleware/permitValidator";
-import { validateToken } from "../middleware/validator";
+import { validateToken, validateUser } from "../middleware/validator";
 
 const coustomerRoute = require("express").Router();
 
@@ -34,5 +34,7 @@ coustomerRoute.get(
   hasAnyPermit(["view"]),
   searchCoustomerHandler
 );
+
+coustomerRoute.post("/local-create", validateUser, addCoustomerHandler);
 
 export default coustomerRoute;
