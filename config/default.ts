@@ -2,7 +2,7 @@ export default {
   port: 9000,
   host: "localhost",
   dbUrl:
-    "mongodb+srv://digitalengineeringtechapi:Asdffdsa-4580@fuel-stations.q9vj38v.mongodb.net/",
+    "mongodb+srv://detfuelstation:asdffdsa-4580@fms.dvyvwbs.mongodb.net/cloud_pos",
   saltWorkFactor: 10,
   secretKey: "suuhh",
   page_limit: 50,
