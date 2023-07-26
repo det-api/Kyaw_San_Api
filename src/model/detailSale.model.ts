@@ -59,6 +59,9 @@ const detailSaleSchema = new Schema({
 
 detailSaleSchema.pre("save", function (next) {
   console.log(this);
+  if (this.createAt) {
+    console.log("wee zzoooo");
+  }
   next();
 });
 const detailSaleModel = mongoose.model<detailSaleDocument>(
