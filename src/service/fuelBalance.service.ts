@@ -53,20 +53,53 @@ export const deleteFuelBalance = async (
   }
 };
 
+// export const calcFuelBalance = async (query, body, payload: string) => {
+//   try {
+//     let result = await fuelBalanceModel.find(query);
+//     if (result.length == 0) {
+//       throw new Error("not work");
+//     }
+//     let gg = result.find(
+//       (ea: { nozzles: string[] }) =>
+//         ea["nozzles"].includes(payload.toString()) == true
+//     );
+//     if (!gg) {
+//       throw new Error("no tank with that nozzle");
+//     }
+//     let cashLiter = gg?.cash + body.liter;
+
+//     let obj = {
+//       cash: cashLiter,
+//       balance: gg.opening + gg.fuelIn - cashLiter,
+//     };
+
+//     await fuelBalanceModel.updateMany({ _id: gg?._id }, obj);
+//     return await fuelBalanceModel.find({ _id: gg?._id }).lean();
+//   } catch (e) {
+//     throw new Error(e);
+//   }
+// };
+
 export const calcFuelBalance = async (query, body, payload: string) => {
   try {
     let result = await fuelBalanceModel.find(query);
-    if (result.length == 0) {
-      throw new Error("not work");
+    if (result.length === 0) {
+      throw new Error("No fuel balance data found for the given query.");
     }
-    let gg = result.find(
-      (ea: { nozzles: string[] }) =>
-        ea["nozzles"].includes(payload.toString()) == true
+
+    let gg = result.find((ea: { nozzles: string[] }) =>
+      ea.nozzles.includes(payload.toString())
     );
+
     if (!gg) {
-      throw new Error("no tank with that nozzle");
+      throw new Error("No tank with the provided nozzle found.");
     }
-    let cashLiter = gg?.cash + body.liter;
+
+    if (typeof body.liter !== "number" || isNaN(body.liter)) {
+      throw new Error("Invalid 'liter' value. It must be a valid number.");
+    }
+
+    let cashLiter = gg.cash + body.liter;
 
     let obj = {
       cash: cashLiter,
@@ -76,7 +109,7 @@ export const calcFuelBalance = async (query, body, payload: string) => {
     await fuelBalanceModel.updateMany({ _id: gg?._id }, obj);
     return await fuelBalanceModel.find({ _id: gg?._id }).lean();
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e); // Rethrow the error with the actual error message
   }
 };
 

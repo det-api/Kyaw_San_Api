@@ -53,6 +53,8 @@ export const addDetailSaleHandler = async (
       return;
     }
 
+    // console.log(req.body);
+
     let result = await addDetailSale(req.body);
     // console.log(result);
 
@@ -83,6 +85,8 @@ export const addDetailSaleHandler = async (
       await updateCoustomer(result.couObjId, coustomerConditon);
     }
 
+    console.log(result);
+
     let checkDate = await getFuelBalance({
       stationId: req.body.stationDetailId,
       createAt: req.body.dailyReportDate,
@@ -93,6 +97,8 @@ export const addDetailSaleHandler = async (
       dateOfDay: result.dailyReportDate,
     });
 
+    console.log(checkRpDate);
+
     if (checkRpDate.length == 0) {
       await addDailyReport({
         stationId: result.stationDetailId,
@@ -101,11 +107,6 @@ export const addDetailSaleHandler = async (
     }
 
     if (checkDate.length == 0) {
-      await addDailyReport({
-        stationId: req.body.stationDetailId,
-        dateOfDay: req.body.dailyReportDate,
-      });
-
       let prevDate = previous(new Date(req.body.dailyReportDate));
       let prevResult = await getFuelBalance({
         stationId: req.body.stationDetailId,

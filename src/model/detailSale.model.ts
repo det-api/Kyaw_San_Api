@@ -58,19 +58,7 @@ const detailSaleSchema = new Schema({
 });
 
 detailSaleSchema.pre("save", function (next) {
-  const options = { timeZone: "Asia/Yangon", hour12: false };
-
-  const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
-
-  const currentDateTime = new Date().toLocaleTimeString("en-US", options);
-
-  let iso: Date = new Date(`${currentDate}T${currentDateTime}.000Z`);
-
-  if (!this.dailyReportDate || !this.createAt) {
-    this.dailyReportDate = currentDate;
-    this.createAt = iso;
-  }
-
+  console.log(this);
   next();
 });
 const detailSaleModel = mongoose.model<detailSaleDocument>(
