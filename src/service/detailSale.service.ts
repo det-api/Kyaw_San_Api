@@ -21,7 +21,6 @@ export const addDetailSale = async (body: detailSaleDocument) => {
     delete body._id;
     return await new detailSaleModel(body).save();
   } catch (e) {
-    console.log(e);
     throw new Error(e);
   }
 };
@@ -57,7 +56,6 @@ export const getDetailSaleByFuelType = async (
   // stationId : string,
   fuelType: string
 ) => {
-  // console.log(dateOfDay);
   let fuel = await getDetailSale({
     dailyReportDate: dateOfDay,
     fuelType: fuelType,
@@ -122,7 +120,6 @@ export const detailSaleByDateAndPagi = async (
   try {
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
-    // console.log(reqPage , skipCount)
     const filter: FilterQuery<detailSaleDocument> = {
       ...query,
       createAt: {

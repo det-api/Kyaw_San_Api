@@ -19,7 +19,6 @@ export const getAllFuelBalanceHandler = async (
   next: NextFunction
 ) => {
   try {
-    // console.log("wk");
     let result = await getFuelBalance(req.query);
     fMsg(res, "FuelIn are here", result);
   } catch (e) {

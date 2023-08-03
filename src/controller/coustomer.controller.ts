@@ -52,8 +52,6 @@ export const searchCoustomerHandler = async (
   next: NextFunction
 ) => {
   try {
-    // searchCoustomer(key)
-    // console.log(req.query);
     let result = await searchCoustomer(req.query);
     fMsg(res, "search result", result);
   } catch (e) {

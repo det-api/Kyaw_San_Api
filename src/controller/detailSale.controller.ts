@@ -31,7 +31,6 @@ export const getDetailSaleHandler = async (
   try {
     let pageNo = Number(req.params.page);
     let { data, count } = await detailSalePaginate(pageNo, req.query);
-    // console.log(typeof result[0].createAt);
     fMsg(res, "DetailSale are here", data, count);
   } catch (e) {
     next(new Error(e));
@@ -46,17 +45,8 @@ export const addDetailSaleHandler = async (
 ) => {
   try {
     // //that is remove after pos updated
-    // let check = await getDetailSale({ vocono: req.body.vocono });
-
-    // if (check.length != 0) {
-    //   fMsg(res, "Data with that Vocono is already exist");
-    //   return;
-    // }
-
-    // console.log(req.body);
 
     let result = await addDetailSale(req.body);
-    // console.log(result);
 
     if (result.cashType == "Debt") {
       // let checkVocono = await getDebt({ vocono: result.vocono });
@@ -108,7 +98,6 @@ export const addDetailSaleHandler = async (
         stationId: req.body.stationDetailId,
         createAt: prevDate,
       });
-      // console.log(prevResult);
       await Promise.all(
         prevResult.map(async (ea) => {
           let obj: fuelBalanceDocument;
@@ -152,7 +141,6 @@ export const addDetailSaleHandler = async (
     );
     fMsg(res, "New DetailSale data was added", result);
   } catch (e) {
-    console.log(e);
     next(new Error(e));
   }
 };

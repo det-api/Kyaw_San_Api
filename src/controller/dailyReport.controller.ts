@@ -124,13 +124,11 @@ export const getDailyReportByDateHandler = async (
     if (!eDate) {
       eDate = new Date();
     }
-    // console.log("drp");
     //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
     result = await getDailyReportByDate(query, startDate, endDate, pageNo);
-    // console.log(result);
     const resultWithDetails = await Promise.all(
       result.map(async (ea) => {
         ea["ninety-two"] = await getDetailSaleByFuelType(
@@ -177,8 +175,6 @@ export const getDailyReportByMonthHandler = async (
   try {
     let year = req.query.year;
     let month = req.query.month;
-
-    console.log(typeof year); 
 
     // delete req.query.year;
     // delete req.query.month;

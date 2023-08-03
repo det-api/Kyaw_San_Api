@@ -21,7 +21,6 @@ export const getDailyReport = async (
 
 export const addDailyReport = async (body: dailyReportDocument | {}) => {
   try {
-    console.log("created  dailyReport");
     return await new dailyReportModel(body).save();
   } catch (e) {
     throw new Error(e);
@@ -108,7 +107,6 @@ export const getDailyReportByMonth = async (
 ): Promise<dailyReportDocument[]> => {
   const startDate = new Date(year, month - 1, 1, 0, 0, 0); // Month is zero-based
   const endDate = new Date(year, month, 1, 0, 0, 0); // Month is zero-based
-  console.log(startDate, endDate);
   const filter: FilterQuery<dailyReportDocument> = {
     ...query,
     date: {

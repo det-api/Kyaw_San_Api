@@ -48,7 +48,6 @@ export const roleAddPermitHandler = async (req : Request , res : Response , next
           }
        let result = await roleAddPermit(req.body.roleId , req.body.permitId)
        fMsg(res , "permit added " , result)
-    // console.log(result)
     }catch(e){
         next(new Error (e))
     }
@@ -57,13 +56,11 @@ export const roleAddPermitHandler = async (req : Request , res : Response , next
 export const roleRemovePermitHandler = async (req : Request , res : Response , next : NextFunction ) => {
     try{
         let role = await getRole({_id : req.body.roleId})
-        console.log(req.body.permitId)
         let dbpermit = role[0]['permits'].find((ea : {}) =>  ea['_id'] == req.body.permitId)
         if(!role || !dbpermit){
             throw new Error("role or permit not found")
         }
        let result = await roleRemovePermit(req.body.roleId  , req.body.permitId)
-       console.log(result)
        fMsg(res , "permit removed " , result)
     }catch(e) {
         next(new Error (e))

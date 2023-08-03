@@ -109,7 +109,6 @@ export const userAddRoleHandler = async (
   if (foundRole) {
     return next(new Error("Role already in exist"));
   }
-  // console.log(found)
   try {
     let result = await userAddRole(user[0]._id, role[0]._id);
     // let result = await userModel.findById(user._id)
@@ -158,7 +157,6 @@ export const userAddPermitHandler = async (
   if (foundRole) {
     return next(new Error("permit already in exist"));
   }
-  // console.log(found)
   try {
     let result = await userAddPermit(user[0]._id, permit[0]._id);
     // let result = await userModel.findById(user._id)
