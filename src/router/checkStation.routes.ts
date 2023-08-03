@@ -11,19 +11,20 @@ const checkStationRoute = require("express").Router();
 
 checkStationRoute.get(
   "/",
+
   getCheckStationHandler
 );
 checkStationRoute.post(
-  "/",
-//   validateToken,
-//   roleValidator(["admin"]),
+  "/new",
+  validateToken,
+  roleValidator(["admin"]),
   addCheckStationHandler
 );
 checkStationRoute.delete(
   "/",
-//   validateToken,
-//   validateAll(allSchemaId),
-//   roleValidator(["admin"]),
+    validateToken,
+    validateAll(allSchemaId),
+    roleValidator(["admin"]),
   deletCheckStationHandler
 );
 

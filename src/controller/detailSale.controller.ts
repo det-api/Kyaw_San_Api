@@ -45,13 +45,13 @@ export const addDetailSaleHandler = async (
   next: NextFunction
 ) => {
   try {
-    //that is remove after pos updated
-    let check = await getDetailSale({ vocono: req.body.vocono });
+    // //that is remove after pos updated
+    // let check = await getDetailSale({ vocono: req.body.vocono });
 
-    if (check.length != 0) {
-      fMsg(res, "Data with that Vocono is already exist");
-      return;
-    }
+    // if (check.length != 0) {
+    //   fMsg(res, "Data with that Vocono is already exist");
+    //   return;
+    // }
 
     // console.log(req.body);
 

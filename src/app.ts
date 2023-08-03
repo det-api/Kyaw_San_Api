@@ -11,13 +11,10 @@ import permitRoute from "./router/permit.routes";
 import stationDetailRoute from "./router/stationDetail.routes";
 import dailyReportRoute from "./router/dailyReport.routes";
 import detailSaleRoute from "./router/detailSale.routes";
-import { backup } from "./backup/backup";
-import { migrate } from "./migration/migrator";
 import fuelBalanceRoute from "./router/fuelBalance.routes";
 import coustomerRoute from "./router/coustomer.routes";
 import debtRoute from "./router/debt.routes";
 import checkStationRoute from "./router/checkStation.routes";
-// import { fMsg2 } from "./utils/helper";
 
 const app = express();
 app.use(express.json());
@@ -59,9 +56,9 @@ app.use("/api/daily-report", dailyReportRoute);
 app.use("/api/detail-sale", detailSaleRoute);
 app.use("/api/fuel-balance", fuelBalanceRoute);
 
-app.use("/api/debt", debtRoute);
-app.use("/api/customer", coustomerRoute);
-app.use('/api/check-station' , checkStationRoute)
+// app.use("/api/debt", debtRoute);
+// app.use("/api/customer", coustomerRoute);
+// app.use('/api/check-station' , checkStationRoute)
 
 //Error Routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
