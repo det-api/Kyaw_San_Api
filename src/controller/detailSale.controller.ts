@@ -48,32 +48,32 @@ export const addDetailSaleHandler = async (
 
     let result = await addDetailSale(req.body);
 
-    if (result.cashType == "Debt") {
-      // let checkVocono = await getDebt({ vocono: result.vocono });
-      // if (checkVocono.length > 0)
-      //   throw new Error("this vocono is alreadly exist");
+    // if (result.cashType == "Debt") {
+    //   // let checkVocono = await getDebt({ vocono: result.vocono });
+    //   // if (checkVocono.length > 0)
+    //   //   throw new Error("this vocono is alreadly exist");
 
-      let coustomerConditon = await getCoustomerById(result.couObjId);
+    //   let coustomerConditon = await getCoustomerById(result.couObjId);
 
-      if (!coustomerConditon)
-        throw new Error("There is no coustomer with that name");
+    //   if (!coustomerConditon)
+    //     throw new Error("There is no coustomer with that name");
 
-      let debtBody = {
-        stationDetailId: result.stationDetailId,
-        vocono: result.vocono,
-        couObjId: result.couObjId,
-        deposit: 0,
-        credit: result.totalPrice,
-        liter: result.saleLiter,
-      };
+    //   let debtBody = {
+    //     stationDetailId: result.stationDetailId,
+    //     vocono: result.vocono,
+    //     couObjId: result.couObjId,
+    //     deposit: 0,
+    //     credit: result.totalPrice,
+    //     liter: result.saleLiter,
+    //   };
 
-      coustomerConditon.cou_debt =
-        coustomerConditon.cou_debt + result.totalPrice;
+    //   coustomerConditon.cou_debt =
+    //     coustomerConditon.cou_debt + result.totalPrice;
 
-      await addDebt(debtBody);
+    //   await addDebt(debtBody);
 
-      await updateCoustomer(result.couObjId, coustomerConditon);
-    }
+    //   await updateCoustomer(result.couObjId, coustomerConditon);
+    // }
 
     let checkDate = await getFuelBalance({
       stationId: req.body.stationDetailId,

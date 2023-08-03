@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 import moment, { MomentTimezone } from "moment-timezone";
 
-const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
-
 export interface fuelInDocument extends mongoose.Document {
   stationId: string;
   driver: string;
@@ -20,7 +18,7 @@ const fuelInSchema = new Schema({
   stationId: {
     type: Schema.Types.ObjectId,
     ref: "stationDetail",
-    require : true
+    require: true,
   },
   driver: { type: String, required: true },
   bowser: { type: String, required: true },
@@ -34,11 +32,21 @@ const fuelInSchema = new Schema({
 });
 
 fuelInSchema.pre("save", function (next) {
-  if (this.receive_date) {
-    next();
-    return;
+  const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
+
+  const options = { timeZone: "Asia/Yangon", hour12: false };
+
+  let currentDateTime = new Date().toLocaleTimeString("en-US", options);
+
+  const [hour, minute, second] = currentDateTime.split(":").map(Number);
+
+  if (hour == 24) {
+    currentDateTime = `00:${minute}:${second}`;
   }
+
+  let iso: Date = new Date(`${currentDate}T${currentDateTime}.000Z`);
   this.receive_date = currentDate;
+  this.createAt = iso;
   next();
 });
 
