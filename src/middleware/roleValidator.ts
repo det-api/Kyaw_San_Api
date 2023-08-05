@@ -9,7 +9,7 @@ export const roleValidator =
       let bol: boolean = false;
       for (let i = 0; i < role.length; i++) {
         let foundRole = await req.body.user[0].roles?.find(
-          (ea: any) => ea.name == role
+          (ea: any) => ea.name == role[i]
         );
         if (foundRole) {
           bol = true;

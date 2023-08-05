@@ -22,9 +22,9 @@ checkStationRoute.post(
 );
 checkStationRoute.delete(
   "/",
-    validateToken,
-    validateAll(allSchemaId),
-    roleValidator(["admin"]),
+  validateToken,
+  validateAll(allSchemaId),
+  roleValidator(["admin"]),
   deletCheckStationHandler
 );
 

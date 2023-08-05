@@ -15,6 +15,7 @@ import fuelBalanceRoute from "./router/fuelBalance.routes";
 import coustomerRoute from "./router/coustomer.routes";
 import debtRoute from "./router/debt.routes";
 import checkStationRoute from "./router/checkStation.routes";
+import tempRoute from "./router/temp.routes";
 
 const app = express();
 app.use(express.json());
@@ -58,7 +59,8 @@ app.use("/api/fuel-balance", fuelBalanceRoute);
 
 // app.use("/api/debt", debtRoute);
 // app.use("/api/customer", coustomerRoute);
-// app.use('/api/check-station' , checkStationRoute)
+app.use("/api/check-station", checkStationRoute);
+app.use("/api/temp", tempRoute);
 
 //Error Routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
