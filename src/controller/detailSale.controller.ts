@@ -8,6 +8,7 @@ import {
   detailSalePaginate,
   detailSaleByDate,
   detailSaleByDateAndPagi,
+  getLastDetailSale,
   // detailSaleByDate,
 } from "../service/detailSale.service";
 import {
@@ -22,6 +23,7 @@ import {
   updateCoustomer,
 } from "../service/coustomer.service";
 import { addDebt } from "../service/debt.service";
+import { getStationDetail } from "../service/stationDetail.service";
 
 export const getDetailSaleHandler = async (
   req: Request,
@@ -237,5 +239,104 @@ export const getDetailSaleDatePagiHandler = async (
     fMsg(res, "detail sale between two date", data, count);
   } catch (e) {
     next(new Error(e));
+  }
+};
+
+export const statementReportHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let sDate: any = req.query.sDate;
+    let eDate: any = req.query.eDate;
+
+    delete req.query.sDate;
+    delete req.query.eDate;
+
+    let query = req.query;
+
+    if (!req.query.stationDetailId) throw new Error("you need stataion");
+    if (!sDate) throw new Error("you need date");
+    if (!eDate) eDate = new Date();
+
+    const startDate: Date = new Date(sDate);
+    const endDate: Date = new Date(eDate);
+
+    let stationDetail = await getStationDetail({
+      _id: req.query.stationDetailId,
+    });
+
+    let finalData: any = [];
+
+    for (let i: number = 1; i <= stationDetail[0].nozzleCount; i++) {
+      let noz = i.toString().padStart(2, "0");
+
+      console.log(noz);
+
+      query = {
+        ...query,
+        nozzleNo: noz,
+      };
+
+      let result = await detailSaleByDate(query, startDate, endDate);
+
+      let count = result.length;
+      console.log(count);
+
+      if (count == 0) {
+        let lastData = await getLastDetailSale(noz);
+
+        let data = {
+          stationId: stationDetail[0].name,
+          nozzle: noz,
+          price: lastData?.salePrice,
+          totalizer_opening: Number(lastData?.totalizer_liter.toFixed(3)),
+          totalizer_closing: Number(lastData?.totalizer_liter.toFixed(3)),
+          totalizer_different: 0,
+          totalSaleLiter: 0,
+          totalSalePrice: 0,
+        };
+
+        finalData.push(data);
+
+        // return;
+      } else {
+        let totalSaleLiter: number = result
+          .map((ea) => ea["saleLiter"])
+          .reduce((pv: number, cv: number): number => pv + cv, 0);
+
+        let totalSalePrice: number = result
+          .map((ea) => ea["totalPrice"])
+          .reduce((pv: number, cv: number): number => pv + cv, 0);
+
+        // console.log(
+        //   result[0].totalizer_liter,
+        //   result[count - 1].totalizer_liter,
+        //   result[count - 1].salePrice
+        // );
+
+        let data = {
+          stationId: stationDetail[0].name,
+          nozzle: noz,
+          price: result[count - 1].salePrice,
+          totalizer_opening: Number(result[0].totalizer_liter.toFixed(3)),
+          totalizer_closing: Number(
+            result[count - 1].totalizer_liter.toFixed(3)
+          ),
+          totalizer_different: Number(
+            result[0].totalizer_liter - result[count - 1].totalizer_liter
+          ).toFixed(3),
+          totalSaleLiter: Number(totalSaleLiter.toFixed(3)),
+          totalSalePrice: Number(totalSalePrice.toFixed(3)),
+        };
+        finalData.push(data);
+      }
+    }
+
+    console.log(finalData);
+    fMsg(res, "final data", finalData);
+  } catch (e) {
+    console.log(e);
   }
 };

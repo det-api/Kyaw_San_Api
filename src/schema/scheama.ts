@@ -91,6 +91,12 @@ export const stationDetailSchema = object({
     lienseNo: string({
       required_error: "lienseNo is required",
     }),
+    deviceCount: number({
+      required_error: "you need device count",
+    }),
+    nozzleNo: number({
+      required_error: "you need nozzle count",
+    }),
   }),
 });
 

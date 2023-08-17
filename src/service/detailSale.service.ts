@@ -146,3 +146,9 @@ export const detailSaleByDateAndPagi = async (
     throw error;
   }
 };
+
+export const getLastDetailSale = async (nozzleNo: string) => {
+  return await detailSaleModel
+    .findOne({ nozzleNo: nozzleNo })
+    .sort({ _id: -1, createAt: -1 });
+};

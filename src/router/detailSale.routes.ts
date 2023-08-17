@@ -4,6 +4,7 @@ import {
   getDetailSaleByDateHandler,
   getDetailSaleDatePagiHandler,
   getDetailSaleHandler,
+  statementReportHandler,
   updateDetailSaleHandler,
 } from "../controller/detailSale.controller";
 
@@ -38,6 +39,7 @@ detailSaleRoute.get(
   hasAnyPermit(["view"]),
   getDetailSaleDatePagiHandler
 );
+
 //that for only device
 detailSaleRoute.post("/", validateAll(detailSaleSchema), addDetailSaleHandler);
 detailSaleRoute.patch(
@@ -54,5 +56,7 @@ detailSaleRoute.delete(
   validateAll(allSchemaId),
   deleteDetailSaleHandler
 );
+
+detailSaleRoute.get("/statement-report", statementReportHandler);
 
 export default detailSaleRoute;

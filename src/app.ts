@@ -16,6 +16,7 @@ import coustomerRoute from "./router/coustomer.routes";
 import debtRoute from "./router/debt.routes";
 import checkStationRoute from "./router/checkStation.routes";
 import tempRoute from "./router/temp.routes";
+import dbConnect from "./utils/connect";
 
 const app = express();
 app.use(express.json());
@@ -27,11 +28,9 @@ const server = require("http").createServer(app);
 
 const port = config.get<number>("port");
 const host = config.get<string>("host");
-const dbUrl = config.get<string>("dbUrl");
 
 //mongodb connection
-
-mongoose.connect(dbUrl);
+dbConnect();
 
 mongoose.connection.on("error", (error) => {
   // Handle mongodb connection error
@@ -61,6 +60,7 @@ app.use("/api/fuel-balance", fuelBalanceRoute);
 // app.use("/api/customer", coustomerRoute);
 app.use("/api/check-station", checkStationRoute);
 app.use("/api/temp", tempRoute);
+
 
 //Error Routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
